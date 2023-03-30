@@ -139,7 +139,6 @@ export default {
   'New Customer?': '¿No tienes cuenta?',
   'Create Account': 'Crear Cuenta',
 
-
   /* Public-ResetPassword */
 
   'Reset': 'إعادة تعيين',

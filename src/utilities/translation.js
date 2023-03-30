@@ -3,6 +3,7 @@ import AsyncStorage from '@react-native-community/async-storage'
 import I18n from 'react-native-i18n'
 
 import en from '@config/translation/en'
+import es from '@config/translation/es'
 import ar from '@config/translation/ar'
 
 import Languages from '@config/language'
@@ -12,7 +13,7 @@ I18n.defaultLocale = 'en'
 I18n.locale = 'en'
 I18n.translations = {
     en,
-    ar
+    es
 }
 I18nManager.allowRTL(false);
 

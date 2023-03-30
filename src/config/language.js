@@ -1,10 +1,14 @@
 export default [
   {
-    code: 'en',
+    code: 'es',
+    name: 'Español',
+    direction: 'rtl'
+  },
+  {  code: 'en',
     name: 'English',
     direction: 'ltr'
   },
-  {
+  /*{
     code: 'ar',
     name: 'عربى',
     direction: 'rtl'
@@ -13,5 +17,6 @@ export default [
     code: 'ar',
     name: 'عربى',
     direction: 'rtl'
-  }
+  }*/
+  
 ]

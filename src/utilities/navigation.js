@@ -7,6 +7,7 @@ const drawerScreens = ['CustomerProfile', 'MemberHome']
 const resetScreens = ['PublicHome']
 
 export const navigate = (routeName, params = []) => {
+  console.log("@@navigate");
   if (resetScreens.includes(routeName)) {
     navigateReset(routeName, params)
     return
@@ -23,6 +24,7 @@ export const navigate = (routeName, params = []) => {
 }
 
 export const navigateReset = (routeName, params = []) => {
+  console.log("@@navigateReset");
   let args = []
   if (drawerScreens.includes(routeName)) {
     args = [{ name: 'Drawer', params }]
@@ -42,12 +44,15 @@ export const navigateReset = (routeName, params = []) => {
 }
 
 export const openDrawer = () => {
+  console.log("@@OPEN DRAWER");
   navigationRef.current?.dispatch(DrawerActions.openDrawer())
 }
 export const closeDrawer = () => {
+  console.log("@@CLOSE DRAWER");
   navigationRef.current?.dispatch(DrawerActions.closeDrawer())
 }
 
 export const back = () => {
+  console.log("@@BACK DRAWER");
   navigationRef.current?.dispatch(CommonActions.goBack())
 }

@@ -1,6 +1,6 @@
 
 import React from 'react'
-import { StatusBar, TouchableOpacity, Text } from 'react-native'
+import { StatusBar, TouchableOpacity,RefreshControl, Text } from 'react-native'
 import { Container, Content, Icon, View } from 'native-base'
 
 import styles from './styles'
@@ -13,20 +13,78 @@ import { navigate } from '@utility/navigation'
 import { __ } from '@utility/translation'
 import request from '@utility/request'
 import { bind } from '@utility/component'
+import { getUsuarioSesion } from '../../../services/Sesion';
 
 export default class extends React.Component {
+
+  constructor(props) {
+    super(props);
+    this.state = {
+        usuarioSesion: undefined,
+        loading: false,
+        refreshing: false,                    
+        listaVehiculos:[],            
+        contador:0,        
+    }
+}
+
+componentDidMount() {
+  /*const { navigation } = this.props;
+  const { params }  = navigation.state;    
+  const { operacion }  = params;                     
+  this.setState({operacion : operacion});     
+  this.init();
+  
+  this.focusListener = navigation.addListener("didFocus", async () => {            
+      const { navigation } = this.props;
+      const { params }  = navigation.state;    
+      const { operacion }  = params;              
+      
+      this.setState({operacion : operacion},async ()=>{
+          this.init();
+          await this._recogerUsuarioSesion();                
+          await this.cargarLista();                              
+      });            
+  });*/
+  this._recogerUsuarioSesion();                
+}
+
+  _recogerUsuarioSesion = async () => {
+    console.log("@_recogerUsuarioSesion ");
+    this.setState({ loading:true });
+
+    let sesion = await getUsuarioSesion();        
+    
+    this.setState({ usuarioSesion: sesion.usuarioSesion, token: sesion.usuarioSesion.token,loading:false });
+}
+
   render () {
     return <Container>
       <Header navLeftType='back' statusBarType='dark' />
 
-      <Content contentContainerStyle={theme.layoutDf}>
-        <View style={styles.myAccountContainer}>
+      <Content contentContainerStyle={theme.layoutDf}
+      refreshControl = {
+        <RefreshControl
+            refreshing={this.state.loading}
+            onRefresh={this._recogerUsuarioSesion}
+        />
+    }>
+
+      {this.state.loading ?
+       ( <View style={styles.myAccountContainer}>
+               <View style={styles.myAccountHeader}>
+                 
+               </View>
+        </View>
+       )
+       :
+        (<View style={styles.myAccountContainer}>
           <View style={styles.myAccountHeader}>
             <View>
-              <Text style={styles.myAccountHeaderTitle}>{__('Hi Salma!')}</Text>
+              <Text style={styles.myAccountHeaderTitle}>{ this.state.usuarioSesion && this.state.usuarioSesion.nombre}</Text>
               <Text style={styles.myAccountHeaderText}>{__('Welcome to WECARCARE')}</Text>
             </View>
-            <View style={styles.myAccountContent}>
+            {/*<View style={styles.myAccountContent}>
               <View style={[styles.myAccountInfo, styles.bgBlue]}>
                 <View>
                   <Text style={styles.numText}>{__('SPENT')}</Text>
@@ -65,6 +123,7 @@ export default class extends React.Component {
                 <Icon name='file-invoice-dollar' type='FontAwesome5' style={[theme.extraHigantic, theme.dark]} />
               </View>
             </TouchableOpacity>
+            */}
             <TouchableOpacity style={styles.settingInfo} onPress={() => { navigate('PublicProfile') }}>
               <View>
                 <Text style={styles.settingTitle}>{__('PROFILE')}</Text>
@@ -85,6 +144,7 @@ export default class extends React.Component {
             </TouchableOpacity>
           </View>
         </View>
+        )}
       </Content>
 
       <Footer currentScreen='Profile' />

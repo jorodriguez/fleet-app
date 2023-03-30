@@ -12,18 +12,23 @@ import { __ } from '@utility/translation'
 
 export default class extends React.Component {
   render () {
-    const item = this.props.item
+    
+    const item = this.props.item;
+
+    //const carImage = item.image ? { uri: item.image  } :  require("../../../../../assets/images/car-placeholder.png");
+    const carImage =  require("../../../../../assets/images/car-placeholder.png");
 
     return (
       <>
         <View style={styles.featureContainer}>
           <TouchableOpacity style={styles.featureContent} onPress={() => { navigate('') }}>
-            <Image source={{ uri: item.image }} style={styles.featureImg} />
+            <Image source= {carImage} style={styles.featureImg} />
             <LinearGradient start={{ x: 0, y: 1 }} end={{ x: 0, y: 0 }} colors={['rgba(0,0,0,0.6)', 'rgba(0,0,0,0.6)', 'rgba(0,0,0,0.1)']} style={styles.linearGradient} />
             <View style={styles.featureInfo}>
               <View>
-                <Text style={styles.featureText}>{item['Text_' + this.props.language] || item.Text}</Text>
-                <Text style={styles.featurePackageText}>{item['descText_' + this.props.language] || item.descText}</Text>
+                <Text style={styles.featureText}>{`${item.marca}  ${item.clase} ${item.modelo} ${item.color}` }</Text>
+                <Text style={styles.featurePackageText}>{item.anio} {item.tipoTransmision} {item.tipoCilindraje} cil</Text>
+                <Text style={styles.featurePackageText}>{item.tipoVehiculo}</Text>
               </View>
               <View style={styles.featureIcon}>
                 <Icon name='arrowright' type='AntDesign' style={[theme.extraHuge, theme.light]} />

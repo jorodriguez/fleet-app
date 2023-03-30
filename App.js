@@ -32,6 +32,7 @@ import PublicChangePassword from '@screen/Public/ChangePassword'
 import PublicPasswordSuccess from '@screen/Public/PasswordSuccess'
 import PublicConfirmation from '@screen/Public/Confirmation'
 import PublicAboutUs from '@screen/Public/AboutUs'
+import PublicSplash from '@screen/Public/Splash'
 
 /* Navigation */
 
@@ -56,13 +57,14 @@ const options = {
 function DrawerRoot () {
   return (
     <Drawer.Navigator
-      initialRouteName='PublicHome'
+      initialRouteName='PublicSplash'
       drawerContent={(props) => <DrawerContent {...props} />}
       drawerStyle={{ width: width - 100 }}
     >
-      <Drawer.Screen name='PublicHome' component={PublicHome} />
-
-    </Drawer.Navigator>
+      <Drawer.Screen name='PublicSignIn' component={PublicSignIn} />
+      <Drawer.Screen name='PublicSplash' component={PublicSplash}  />
+      
+     </Drawer.Navigator>
   )
 }
 
@@ -98,8 +100,10 @@ export default class App extends React.Component {
         <Stack.Navigator initialRouteName='Drawer' headerMode='none'>
           <Stack.Screen name='Drawer' component={DrawerRoot} />
 
-          <Stack.Screen name='PublicLanguage' component={PublicLanguage} options={options} />
+          <Drawer.Screen name='PublicSplash' component={PublicSplash}  options={options}/>
+          <Stack.Screen name='PublicLanguage' component={PublicLanguage} options={options} />          
 
+          
           <Stack.Screen name='PublicHome' component={PublicHome} options={options} />
           <Stack.Screen name='PublicMyAccount' component={PublicMyAccount} options={options} />
           <Stack.Screen name='PublicOrder' component={PublicOrder} options={options} />

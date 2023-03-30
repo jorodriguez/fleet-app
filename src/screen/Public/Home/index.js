@@ -1,6 +1,6 @@
 
 import React from 'react'
-import { TouchableOpacity } from 'react-native'
+import { TouchableOpacity,RefreshControl } from 'react-native'
 import { Container, Content, Icon, Text, View } from 'native-base'
 import AsyncStorage from '@react-native-community/async-storage'
 import { } from 'rn-placeholder'
@@ -26,6 +26,9 @@ import featuredList from './data/featured'
 import packageList from './data/package'
 import membershipList from './data/membership'
 import reviewList from './data/review'
+import {getAsignacionVehiculo} from '../../../services/AsignacionVehiculoService'
+
+
 
 export default class extends React.Component {
   constructor (props) {
@@ -34,53 +37,25 @@ export default class extends React.Component {
       selected: '',
       visibleDailyReminder: false,
       isDisabled: false,
-      isOpen: false
+      isOpen: false,
+      loading:false
     }
 
     this.state = {
       language: 'en',
 
-      featuredList: [],
-      fetchingFeaturedList: true,
-
-      packageList: [],
-      fetchingPackageList: true,
-
-      membershipList: [],
-      fetchingMembershipList: true,
-
-      reviewList: [],
-      fetchingReviewList: true
+      vehiculosAsignados: [],
+      loadingVehiculosAsignados:false
+       
     }
 
-    bind(this)
+    bind(this);
 
-    this.fetchFeaturedList = this.fetchFeaturedList.bind(this)
-    this.fetchPackageList = this.fetchPackageList.bind(this)
-    this.fetchMembershipList = this.fetchMembershipList.bind(this)
-    this.fetchReviewList = this.fetchReviewList.bind(this)
+    //this.showDailyReminder = this.showDailyReminder.bind(this)
+    //this.onChangeDailyReminder = this.onChangeDailyReminder.bind(this)
 
-    this.showDailyReminder = this.showDailyReminder.bind(this)
-    this.onChangeDailyReminder = this.onChangeDailyReminder.bind(this)
   }
 
-  showDailyReminder () {
-    this.setState({
-      visibleDailyReminder: true
-    })
-  }
-
-  onChangeDailyReminder () {
-    this.setState({
-      visibleDailyReminder: false
-    })
-  }
-
-  onValueChange () {
-    this.setState({
-      selected: ''
-    })
-  }
 
   async componentDidMount () {
     const language = await AsyncStorage.getItem('language')
@@ -88,75 +63,54 @@ export default class extends React.Component {
       language
     })
 
-    await this.fetchFeaturedList()
-    await this.fetchPackageList()
-    await this.fetchMembershipList()
-    await this.fetchReviewList()
+    await this.getVehiculosAsignados();
+    
   }
 
-  async fetchFeaturedList () {
+  async getVehiculosAsignados () {
+    
     await this.promisedSetState({
-      fetchingFeaturedList: true
-    })
-    const list = await request(featuredList)
+      loadingVehiculosAsignados: true
+    });
+
+    const list = await getAsignacionVehiculo();
+
     await this.promisedSetState({
-      featuredList: list,
-      fetchingFeaturedList: false
-    })
+      vehiculosAsignados: list,
+      loadingVehiculosAsignados: false
+    });
+
   }
 
-  async fetchPackageList () {
-    await this.promisedSetState({
-      fetchingPackageList: true
-    })
-    const list = await request(packageList)
-    await this.promisedSetState({
-      packageList: list,
-      fetchingPackageList: false
-    })
-  }
-
-  async fetchMembershipList () {
-    await this.promisedSetState({
-      fetchingMembershipList: true
-    })
-    const list = await request(membershipList)
-    await this.promisedSetState({
-      membershipList: list,
-      fetchingMembershipList: false
-    })
-  }
-
-  async fetchReviewList () {
-    await this.promisedSetState({
-      fetchingReviewList: true
-    })
-    const list = await request(reviewList)
-    await this.promisedSetState({
-      reviewList: list,
-      fetchingReviewList: false
-    })
+  _onRefresh = async () => {
+    await this.getVehiculosAsignados();
   }
 
   render () {
     return <Container>
       <Header navLeftType='menu' navMiddleType='medium' title='COBRA' statusBarType='dark' />
 
-      <Content contentContainerStyle={theme.layoutDf}>
+      <Content contentContainerStyle={theme.layoutDf}  
+        refreshControl={
+          <RefreshControl
+              refreshing={this.state.loadingVehiculosAsignados}
+              onRefresh={this._onRefresh}
+          />}
+          >
 
         <Featured
           language={this.state.language}
-          list={this.state.featuredList}
-          fetching={this.state.fetchingFeaturedList}
+          list={this.state.vehiculosAsignados}
+          fetching={this.state.loadingVehiculosAsignados}
         />
 
-        <View style={styles.bookNowBtnInfo}>
+{/*        <View style={styles.bookNowBtnInfo}>
           <TouchableOpacity style={styles.bookNowBtn} onPress={this.showDailyReminder}>
             <Text style={styles.bookNowBtnText}>{__('Registrar KM')}</Text>
             <Icon name='calendar' type='AntDesign' style={[theme.extraHuge, theme.light]} />
           </TouchableOpacity>
         </View>
-{/*
+
         <Package
           language={this.state.language}
           list={this.state.packageList}
