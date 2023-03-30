@@ -76,7 +76,8 @@ export default {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    paddingHorizontal: 15
+    paddingHorizontal: 15,
+    /*backgroundColor: 'rgba(100, 99, 71, 0.8)'*/
   },
   featureText: {
     fontFamily: FAMILY.bold,
@@ -89,7 +90,7 @@ export default {
     color: COLOR.default
   },
   featureIcon: {
-    marginTop: 15
+    marginTop: 0
   },
 
   // Package//

@@ -129,7 +129,7 @@ android {
     }
 
     defaultConfig {
-        applicationId "com.wecarcarerntheme"
+        applicationId "com.fleet.app"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode 1

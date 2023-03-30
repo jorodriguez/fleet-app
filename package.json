@@ -1,13 +1,18 @@
 {
-  "name": "WeCarCareRnTheme",
+  "name": "fleetapp",
   "version": "0.0.1",
   "private": true,
   "scripts": {
+    "android-bundle": "ORG_GRADLE_PROJECT_bundleInDev=true npm run android",
     "android": "react-native run-android",
     "ios": "react-native run-ios",
+    "lint": "eslint .",    
+    "clean-build": "cd android && ./gradlew clean && ./gradlew assembleRelease",
+    "apk": "cd android && ./gradlew assembleRelease",
+    "clear-cache": "cd android && ./gradlew cleanBuildCache",    
     "start": "react-native start",
     "test": "jest",
-    "lint": "eslint ."
+    "build:ios": "react-native bundle --entry-file='index.ios.js' --bundle-output='./ios/MagicIntelligence/main.jsbundle' --dev=false --platform='ios' --assets-dest='./ios'"
   },
   "dependencies": {
     "@react-native-community/async-storage": "1.9.0",

@@ -16,14 +16,15 @@ export default class extends React.Component {
     const item = this.props.item;
 
     //const carImage = item.image ? { uri: item.image  } :  require("../../../../../assets/images/car-placeholder.png");
-    const carImage =  require("../../../../../assets/images/car-placeholder.png");
+    const carImage =  require("../../../../../assets/images/car-placeholder2.png");
 
     return (
       <>
         <View style={styles.featureContainer}>
-          <TouchableOpacity style={styles.featureContent} onPress={() => { navigate('') }}>
-            <Image source= {carImage} style={styles.featureImg} />
-            <LinearGradient start={{ x: 0, y: 1 }} end={{ x: 0, y: 0 }} colors={['rgba(0,0,0,0.6)', 'rgba(0,0,0,0.6)', 'rgba(0,0,0,0.1)']} style={styles.linearGradient} />
+          <TouchableOpacity style={styles.featureContent} onPress={() => { navigate('PublicBooking') }}>
+          <Image source= {carImage} style={styles.featureImg} />
+          <LinearGradient start={{ x: 0, y: 1 }} end={{ x: 0, y: 0 }} colors={['rgba(0,0,0,0.6)', 'rgba(0,0,0,0.6)', 'rgba(0,0,0,0.1)']} style={styles.linearGradient} />            
+            
             <View style={styles.featureInfo}>
               <View>
                 <Text style={styles.featureText}>{`${item.marca}  ${item.clase} ${item.modelo} ${item.color}` }</Text>
