@@ -23,6 +23,8 @@ import sessionList from './data/session'
 
 import Header from '@component/Header'
 
+import {launchCamera, launchImageLibrary} from 'react-native-image-picker';
+
 export default class extends React.Component {
   constructor (props) {
     super(props)
@@ -34,7 +36,7 @@ export default class extends React.Component {
       isDisabled: false,
       isOpen: false,
       language: 'en',
-
+      photos:[],
       country: 'hatchback',
 
       sessionList: [],
@@ -83,6 +85,72 @@ export default class extends React.Component {
 
     await this.fetchSessionList()
   }
+
+/*Permisos*/
+cameraPermission = async () => {
+
+  const granted = await PermissionsAndroid.request(PermissionsAndroid.PERMISSIONS.CAMERA);
+
+  if(granted === PermissionsAndroid.RESULTS.GRANTED) {
+    // if get here, the user has accepted the permissions
+    this.cameraLaunch();
+  } else {
+    // if get here, the user did NOT accepted the permissions
+  }
+}
+
+cameraLaunch = async () => {
+
+  let options = {
+    storageOptions: {
+      videoQuality: 'high',
+      mediaType: 'photo',
+      saveToPhotos: true,
+      skipBackup: true,
+      path: 'checklist',
+    },
+  };
+
+  const result = await launchCamera(options);
+
+  /*launchImageLibrary(options, (res) => {
+    console.log('Response = ', res);
+    if (res.didCancel) {
+      console.log('User cancelled image picker');
+    } else if (res.error) {
+      console.log('ImagePicker Error: ', res.error);
+    } else if (res.customButton) {
+      console.log('User tapped custom button: ', res.customButton);
+      alert(res.customButton);
+    } else {
+  
+      this.addPhoto(res);
+      
+    }
+  });*/
+}
+
+
+
+
+addPhoto = (res)=>{
+      
+  let array = this.state.photos;
+  
+  console.log(res);
+  
+  array.unshift({
+              url: res.uri,
+              name: res.fileName,
+              type: res.type,              
+              uri: res.uri,                  
+              fileSize: res.fileSize,
+              nota:""
+            });                     
+
+  this.setState({photos:array});
+}
+
 
   async fetchSessionList () {
     await this.promisedSetState({
@@ -368,16 +436,17 @@ export default class extends React.Component {
     </View>
   }
   render () {
-    let tabContent
-    if (this.state.tabSelected === 'vehicle') {
+    let tabContent = this.renderVehicle();
+    /*if (this.state.tabSelected === 'vehicle') {
       tabContent = this.renderVehicle()
-    } else if (this.state.tabSelected === 'package') {
+    }     else if (this.state.tabSelected === 'package') {
       tabContent = this.renderPackage()
     } else if (this.state.tabSelected === 'appoint') {
       tabContent = this.renderAppointment()
     } else if (this.state.tabSelected === 'payment') {
       tabContent = this.renderPayment()
-    }
+    }*/
+
     return <Container>
       <Header navLeftType='back' statusBarType='dark' />
       <View style={styles.bookingContainer}>
@@ -387,7 +456,11 @@ export default class extends React.Component {
             <Text style={styles.bookingHeaderlTitle}>{__('Kilometraje')}</Text>
             <Text style={styles.bookingHeaderlText}>{__('Registra el kilometraje de tu VH')}</Text>
           </View>
-          <ScrollView horizontal
+          <TouchableOpacity style={ styles.tabActive} onPress={() => this.cameraLaunch()}>
+                    <Icon style={{ color: "white" }} size={35} name='camera' type="MaterialCommunityIcons" />
+                    <Text>Toma Foto</Text>                                  
+          </TouchableOpacity>          
+          {/*<ScrollView horizontal
             showsHorizontalScrollIndicator={false}>
             <View style={styles.tabInfo}>
               <TouchableOpacity style={this.state.tabSelected === 'vehicle' ? styles.tabActive : styles.tab} onPress={() => this.setState({ tabSelected: 'vehicle' })}>
@@ -403,7 +476,7 @@ export default class extends React.Component {
                 <Text style={this.state.tabSelected === 'payment' ? styles.tabTextActive : styles.tabText}>{__('PAYMENT')}</Text>
               </TouchableOpacity>
             </View>
-          </ScrollView>
+          </ScrollView>*/}
         </View>
       </View>
 
