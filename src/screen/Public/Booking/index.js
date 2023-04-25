@@ -1,6 +1,6 @@
 import React from 'react'
 import { TouchableOpacity, Image, ScrollView, TextInput, FlatList } from 'react-native'
-import { Container, Content, Icon, Text, View } from 'native-base'
+import { Container, Content, Icon, Text, View ,Alert } from 'native-base'
 import AsyncStorage from '@react-native-community/async-storage'
 import { } from 'rn-placeholder'
 
@@ -101,6 +101,8 @@ cameraPermission = async () => {
 
 cameraLaunch = async () => {
 
+  console.log("@@lanznado la camara ");
+try{
   let options = {
     storageOptions: {
       videoQuality: 'high',
@@ -111,7 +113,26 @@ cameraLaunch = async () => {
     },
   };
 
-  const result = await launchCamera(options);
+  const camaraResponse = await launchCamera(options);
+
+  if(camaraResponse.didCancel){
+    console.log('User cancelled image picker');
+  }else{
+    if(camaraResponse.errorCode){
+      console.log('ImagePicker Error: ', camaraResponse.error);
+      Alert.alert("Error","Ups¡ al parecer hubó un error ["+camaraResponse.errorMessage+"]");
+    }else{
+      if (camaraResponse.customButton) {
+          console.log('User tapped custom button: ', camaraResponse.customButton);  
+      }else{
+        this.addPhoto(camaraResponse);
+      }
+    }
+  }
+
+}catch(e){
+  console.log("==== ERROR "+e);
+}
 
   /*launchImageLibrary(options, (res) => {
     console.log('Response = ', res);
@@ -134,21 +155,32 @@ cameraLaunch = async () => {
 
 
 addPhoto = (res)=>{
+
+  console.log("@addPhoto");
       
   let array = this.state.photos;
   
-  console.log(res);
+  const assets = res.assets;
+
+  console.log(assets[0]);
+   
+  let assetsArray = assets.map(e => {
+    return{
+      url: e.uri,
+      name : e.fileName,
+      type : e.type,              
+      uri: e.uri,                  
+      fileSize: e.fileSize,
+      base64: e.base64,
+      nota: ""}
+  });  
   
-  array.unshift({
-              url: res.uri,
-              name: res.fileName,
-              type: res.type,              
-              uri: res.uri,                  
-              fileSize: res.fileSize,
-              nota:""
-            });                     
+  array.unshift(...assetsArray);
+
+  console.log(array);
 
   this.setState({photos:array});
+  
 }
 
 
@@ -460,6 +492,17 @@ addPhoto = (res)=>{
                     <Icon style={{ color: "white" }} size={35} name='camera' type="MaterialCommunityIcons" />
                     <Text>Toma Foto</Text>                                  
           </TouchableOpacity>          
+
+         {
+          this.state.photos.map(e=> <View style={styles.payPalInfo}>
+            <TouchableOpacity>
+              <Image style={styles.cardImg}
+                source={{ uri: e.uri }} />
+            </TouchableOpacity>
+          </View> )
+          }
+          
+
           {/*<ScrollView horizontal
             showsHorizontalScrollIndicator={false}>
             <View style={styles.tabInfo}>

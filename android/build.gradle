@@ -5,7 +5,7 @@
 buildscript {
     ext {
         buildToolsVersion = "29.0.2"
-        minSdkVersion = 16
+        minSdkVersion = 21
         compileSdkVersion = 29
         targetSdkVersion = 29
     }
@@ -31,7 +31,7 @@ allprojects {
                 includeGroup "com.facebook.react"
             }
             forRepository {
-                maven {
+                maven { 
                     url "$rootDir/../node_modules/react-native/android"
                 }
             }
