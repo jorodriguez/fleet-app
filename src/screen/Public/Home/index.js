@@ -141,7 +141,10 @@ export default class extends React.Component {
           />
           : null
       }
+      
       <Footer currentScreen='Home' />
+
+
     </Container>
   }
 }

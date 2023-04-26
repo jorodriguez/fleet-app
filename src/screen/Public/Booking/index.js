@@ -492,11 +492,12 @@ addPhoto = (res)=>{
     }*/
 
     return <Container>
-      <Header navLeftType='back' statusBarType='dark' />
+      <Header navLeftType='back' statusBarTspe='dark' />
       <View style={styles.bookingContainer}>
 
         <View style={styles.bookingContent}>
-          <View style={styles.bookingHeader}>                     
+            
+            <View style={styles.bookingHeader}>                             
               <Text style={styles.bookingHeaderlTitle}>{__('Registro de Kilometraje')}</Text>            
               <Text style={styles.bookingHeaderlText}>{__('Último registrado : 0 km')}</Text>           
           </View>
@@ -507,7 +508,8 @@ addPhoto = (res)=>{
             </Left>
             <Body>
                 <TextInput
-                      placeholder='Escribe aquí el Km'                     
+                      placeholder='Escribe aquí el Km'     
+                      keyboardType='numeric'                
                       style={styles.formInputKilometraje}
                   />  
             </Body>
@@ -563,25 +565,46 @@ addPhoto = (res)=>{
             
           />       
         
-      </Content>
+        
 
+      </Content>
 
 
       <View style={theme.footer}>
         <TouchableOpacity style={theme.fBtn} onPress={() => { navigate('PublicHome') }}>
-            <Icon name='car' type='FontAwesome5' style={theme.fBtnIcon} />
+            <Icon name='car' type='FontAwesome5' style={theme.fBtnIcon} />            
         </TouchableOpacity>
         
         <View style={theme.botPop}>
-          <TouchableOpacity style={theme.botPopBtnGuardar} onPress={() => { /*guardar*/  }}>
-            <Text style={theme.botPopTextGuardar}>{__('Guardar')}</Text>            
+          <TouchableOpacity style={theme.botPopBtn} onPress={() => { /*guardar*/  }}>
+            <Text style={theme.botPopText}>{__('Guardar')}</Text>            
           </TouchableOpacity>
-        </View>
+        </View>        
+        <TouchableOpacity style={ theme.fBtn} onPress={() => { navigate('PublicMyAccount') }}>
+        <Icon name='history' type='FontAwesome5' style={theme.fBtnIcon} />
+        </TouchableOpacity>
+      </View>
+
+      {/*<View style={{flex:1, flexDirection: 'row',justifyContent: 'center',alignItems:"center",backgroundColor:"red"}}>
+      
+          <TouchableOpacity style={theme.fBtn} onPress={() => { navigate('PublicHome') }}>
+            <Icon name='car' type='FontAwesome5' style={theme.fBtnIcon} />
+          </TouchableOpacity>
+        
+          <View style={theme.botPop}>
+          <TouchableOpacity style={theme.botPopBtnGuardar} onPress={() => {  }}>
+            <Text style={theme.botPopTextGuardar}>{__('Guardar')}</Text>            
+          </TouchableOpacity>        
+          </View>
         
         <TouchableOpacity style={this.props.currentScreen === 'Profile' ? theme.fBtnActive : theme.fBtn} onPress={() => { navigate('PublicMyAccount') }}>
           <Icon name='history' type='FontAwesome5' style={theme.fBtnIcon} />
         </TouchableOpacity>
-      </View>
+      
+      </View>*/}
+      
+      
+      
 
 
 

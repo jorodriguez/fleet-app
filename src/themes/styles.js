@@ -269,7 +269,9 @@ export default {
     },
 
     botPop: {
-        flex: 1
+        flex: 1,
+        /*agregado por mi*/
+        flexDirection:"column",justifyContent:"center",alignContent:"center",alignItems:"center"
     },
     botPopBtn: {
         position: 'absolute',
@@ -290,7 +292,7 @@ export default {
         borderRadius: 50,
         justifyContent: 'center',
         alignItems: 'center',
-        backgroundColor: COLOR.darkViolet,
+        backgroundColor: COLOR.bluedarkViolet,
         marginBottom: -15
     },
     botPopTextGuardar: {

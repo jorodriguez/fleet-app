@@ -21,8 +21,7 @@ export default class extends React.Component {
         <View style={styles.profileContainer}>
 
           <View style={styles.profileDetail}>
-            <View style={styles.profileHeader}>
-              <Icon name='user' type='FontAwesome' style={[theme.extraHigantic, theme.dark]} />
+            <View style={styles.profileHeader}>              
               <View style={styles.profileHeaderInfo}>
                 <Text style={styles.profileHeaderTitle}>{__('Profile')}</Text>
                 <Text style={styles.profileHeaderText}>{__('Manage your profile informations')}</Text>
