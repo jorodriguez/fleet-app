@@ -1,18 +1,15 @@
 import React from 'react'
-import { TouchableOpacity, Image, ScrollView, TextInput, FlatList } from 'react-native'
-import { Container, Content, Icon, Text, View ,Alert } from 'native-base'
+import { TouchableOpacity, Image, ScrollView,  FlatList,TextInput } from 'react-native'
+import { Container, Content, Icon, Text, View ,Alert,Card,CardItem, Button, Right,Left,Body,List,ListItem,Thumbnail,Input, Footer,Item} from 'native-base'
 import AsyncStorage from '@react-native-community/async-storage'
 import { } from 'rn-placeholder'
 
 import Modal from 'react-native-modalbox'
-
 import DropDownPicker from 'react-native-dropdown-picker'
-
 import DateTimePicker from '@react-native-community/datetimepicker'
-
 import styles from './styles'
 import theme from '@theme/styles'
-
+import { COLOR, FAMILY, SIZE } from '@theme/typography';
 import { navigate } from '@utility/navigation'
 import { __ } from '@utility/translation'
 import request from '@utility/request'
@@ -20,10 +17,11 @@ import { bind } from '@utility/component'
 
 import Session from './Session'
 import sessionList from './data/session'
-
 import Header from '@component/Header'
 
 import {launchCamera, launchImageLibrary} from 'react-native-image-picker';
+import { ImageGallery } from '@georstat/react-native-image-gallery';
+
 
 export default class extends React.Component {
   constructor (props) {
@@ -38,7 +36,8 @@ export default class extends React.Component {
       language: 'en',
       photos:[],
       country: 'hatchback',
-
+      isOpenGallery:false,
+      indexPhotoSelected:1,
       sessionList: [],
       fetchingSessionList: true
     }
@@ -58,6 +57,9 @@ export default class extends React.Component {
 
     this.showDailyReminder = this.showDailyReminder.bind(this)
     this.onChangeDailyReminder = this.onChangeDailyReminder.bind(this)
+
+    this.openGallery = this.openGallery.bind(this);
+    this.closeGallery = this.closeGallery.bind(this);
   }
   showDailyReminder () {
     this.setState({
@@ -69,6 +71,14 @@ export default class extends React.Component {
     this.setState({
       visibleDailyReminder: false
     })
+  }
+
+  openGallery(index){
+     this.setState({isOpenGallery:true,indexPhotoSelected:index});
+  }
+  
+  closeGallery (){
+      this.setState({isOpenGallery:false});
   }
 
   onValueChange () {
@@ -163,7 +173,8 @@ addPhoto = (res)=>{
   const assets = res.assets;
 
   console.log(assets[0]);
-   
+  
+  
   let assetsArray = assets.map(e => {
     return{
       url: e.uri,
@@ -172,6 +183,7 @@ addPhoto = (res)=>{
       uri: e.uri,                  
       fileSize: e.fileSize,
       base64: e.base64,
+      source: {uri:e.uri},      
       nota: ""}
   });  
   
@@ -468,7 +480,7 @@ addPhoto = (res)=>{
     </View>
   }
   render () {
-    let tabContent = this.renderVehicle();
+    //let tabContent = this.renderVehicle();
     /*if (this.state.tabSelected === 'vehicle') {
       tabContent = this.renderVehicle()
     }     else if (this.state.tabSelected === 'package') {
@@ -484,25 +496,26 @@ addPhoto = (res)=>{
       <View style={styles.bookingContainer}>
 
         <View style={styles.bookingContent}>
-          <View style={styles.bookingHeader}>
-            <Text style={styles.bookingHeaderlTitle}>{__('Kilometraje')}</Text>
-            <Text style={styles.bookingHeaderlText}>{__('Registra el kilometraje de tu VH')}</Text>
+          <View style={styles.bookingHeader}>                     
+              <Text style={styles.bookingHeaderlTitle}>{__('Registro de Kilometraje')}</Text>            
+              <Text style={styles.bookingHeaderlText}>{__('Último registrado : 0 km')}</Text>           
           </View>
-          <TouchableOpacity style={ styles.tabActive} onPress={() => this.cameraLaunch()}>
-                    <Icon style={{ color: "white" }} size={35} name='camera' type="MaterialCommunityIcons" />
-                    <Text>Toma Foto</Text>                                  
-          </TouchableOpacity>          
-
-         {
-          this.state.photos.map(e=> <View style={styles.payPalInfo}>
-            <TouchableOpacity>
-              <Image style={styles.cardImg}
-                source={{ uri: e.uri }} />
-            </TouchableOpacity>
-          </View> )
-          }
-          
-
+       
+          <ListItem icon>            
+            <Left >
+                <Icon  style={{color:"gray",fontSize:20}} name='gauge' type="Entypo"  onPress={() => this.cameraLaunch()} />                        
+            </Left>
+            <Body>
+                <TextInput
+                      placeholder='Escribe aquí el Km'                     
+                      style={styles.formInputKilometraje}
+                  />  
+            </Body>
+            <Right >
+                <Icon style={{color:COLOR.lightViolet}} name='camera' type="FontAwesome"  onPress={() => this.cameraLaunch()} />                        
+            </Right>
+          </ListItem>
+        
           {/*<ScrollView horizontal
             showsHorizontalScrollIndicator={false}>
             <View style={styles.tabInfo}>
@@ -523,11 +536,62 @@ addPhoto = (res)=>{
         </View>
       </View>
 
-      <Content contentContainerStyle={theme.layoutDf}>
+      <Content  contentContainerStyle={theme.layoutDf}>
+        
+        
+
+        {
+        this.state.photos.map((e,index)=>     
+          <ListItem thumbnail style={{paddingBottom:5}} onPress={()=>this.openGallery(index)}>                        
+                
+                <Thumbnail  square                             
+                               style={{height: 200, width: null, marginEnd:15, flex:1,justifyContent:"center",alignContent:"center",alignSelf:"center"}}
+                               source={{ uri: e.uri}} />
+                
+            
+          </ListItem>
+              )
+        }
+                    
+
+        <ImageGallery    
+            initialIndex={this.state.indexPhotoSelected}                            
+            thumbSize={50}
+            images={this.state.photos}
+            isOpen={this.state.isOpenGallery}                      
+            close={this.closeGallery}
+            
+          />       
+        
+      </Content>
+
+
+
+      <View style={theme.footer}>
+        <TouchableOpacity style={theme.fBtn} onPress={() => { navigate('PublicHome') }}>
+            <Icon name='car' type='FontAwesome5' style={theme.fBtnIcon} />
+        </TouchableOpacity>
+        
+        <View style={theme.botPop}>
+          <TouchableOpacity style={theme.botPopBtnGuardar} onPress={() => { /*guardar*/  }}>
+            <Text style={theme.botPopTextGuardar}>{__('Guardar')}</Text>            
+          </TouchableOpacity>
+        </View>
+        
+        <TouchableOpacity style={this.props.currentScreen === 'Profile' ? theme.fBtnActive : theme.fBtn} onPress={() => { navigate('PublicMyAccount') }}>
+          <Icon name='history' type='FontAwesome5' style={theme.fBtnIcon} />
+        </TouchableOpacity>
+      </View>
+
+
+
+      {/*
+        <Content contentContainerStyle={theme.layoutDf}>
         <View style={styles.bookingBg}>
           {tabContent}
         </View>
-      </Content>
+        </Content>
+      
 
       <Modal
         ref={'ModalConfirm'}
@@ -556,8 +620,9 @@ addPhoto = (res)=>{
           </TouchableOpacity>
         </ScrollView>
       </Modal>
-
-      {
+       
+*/}
+      {/*
         this.state.visibleDailyReminder
           ? <DateTimePicker
             value={new Date('2020-06-12T14:42:42')}
@@ -566,7 +631,7 @@ addPhoto = (res)=>{
             onChange={this.onChangeDailyReminder}
           />
           : null
-      }
+    */}
 
     </Container>
   }
