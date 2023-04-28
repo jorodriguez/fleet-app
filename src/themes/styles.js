@@ -9,7 +9,9 @@ export default {
 
     layoutDf: {
         flexGrow: 1,
-        backgroundColor: 'rgba(89,73,158,0.1)'
+        backgroundColor: 'rgba(89,73,158,0.1)',
+        
+        
     },
 
     layoutFx: {

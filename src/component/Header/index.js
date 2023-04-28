@@ -4,7 +4,9 @@ import { StatusBar, View, TouchableOpacity } from 'react-native'
 import { Header as HeaderNB, Icon, Text } from 'native-base'
 
 import theme from '@theme/styles'
-import { openDrawer, back, navigate } from '@utility/navigation'
+import { openDrawer,navigationRef, back, navigate } from '@utility/navigation'
+
+
 
 class Header extends React.Component {
   constructor (props) {
@@ -43,11 +45,11 @@ class Header extends React.Component {
       icon = <TouchableOpacity style={theme.btnTransparent} onPress={back}>
         <Icon name='arrow-left' type='Feather' style={[theme.huge, theme.light]} />
       </TouchableOpacity>
-    } else if (this.props.navLeftType === 'menu') {
+    } /* else if (this.props.navLeftType === 'menu') {  descomentar para mostrar la hamburguesa
       icon = <TouchableOpacity style={theme.btnTransparent} onPress={openDrawer}>
         <Icon name='menu' type='Entypo' style={[theme.huge, theme.light]} />
       </TouchableOpacity>
-    }
+    }*/
 
     return (
       <View style={this.props.navLeftStyle}>

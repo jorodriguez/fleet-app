@@ -52,10 +52,11 @@ export default {
   // Feature//
   featureContainer: {
     backgroundColor: COLOR.violet,
-    paddingVertical: 30
+    paddingVertical: 30,    
   },
-  featureContent: {
-    marginLeft: 20
+  featureContent: {    
+    marginLeft:5
+    
   },
   featureImg: {
     flex: 1,

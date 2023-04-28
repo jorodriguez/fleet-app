@@ -21,7 +21,7 @@ export default class extends React.Component {
     return (
       <>
         <View style={styles.featureContainer}>
-          <TouchableOpacity style={styles.featureContent} onPress={() => { navigate('PublicBooking') }}>
+          <TouchableOpacity style={styles.featureContent} onPress={() => { navigate('PublicBooking',{ item }) }}>
           <Image source= {carImage} style={styles.featureImg} />
           <LinearGradient start={{ x: 0, y: 1 }} end={{ x: 0, y: 0 }} colors={['rgba(0,0,0,0.6)', 'rgba(0,0,0,0.6)', 'rgba(0,0,0,0.1)']} style={styles.linearGradient} />            
             

@@ -26,6 +26,16 @@ export default {
     bookingHeaderlTitle: {
         fontFamily: FAMILY.bold,
         fontSize: SIZE.extraLarge,
+        color: COLOR.darkViolet,      
+    },
+    bookingHeaderlTitleKm: {
+        fontFamily: FAMILY.bold,
+        fontSize: SIZE.medium,
+        color: COLOR.darkLight,      
+    },
+    bookingSubHeaderlTitle: {
+        fontFamily: FAMILY.norma,
+        fontSize: SIZE.regular,
         color: COLOR.darkViolet,
         marginBottom: 10
     },
@@ -33,8 +43,8 @@ export default {
         fontFamily: FAMILY.regular,
         fontSize: SIZE.medium,
         color: 'rgba(126, 126, 144, 1)',
-        opacity: 0.4,
-        marginBottom: 15
+        opacity: 0.4
+        
     },
     bookingBg: {
         backgroundColor: COLOR.light,

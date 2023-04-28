@@ -1,6 +1,7 @@
 import * as React from 'react'
 import { CommonActions, DrawerActions, StackActions } from '@react-navigation/native'
 
+
 export const navigationRef = React.createRef()
 
 const drawerScreens = ['CustomerProfile', 'MemberHome']
@@ -31,7 +32,7 @@ export const navigateReset = (routeName, params = []) => {
   } else {
     args = [{ name: routeName, params }]
   }
-  navigationRef.current?.dispatch(state => {
+  navigationRef.current?.dispatch(state => {  
     console.log(state.routes)
     // Remove the home route from the stack
     const routes = state.routes.filter(r => r.name !== 'Home');
@@ -45,14 +46,19 @@ export const navigateReset = (routeName, params = []) => {
 
 export const openDrawer = () => {
   console.log("@@OPEN DRAWER");
+  
   navigationRef.current?.dispatch(DrawerActions.openDrawer())
+  
 }
 export const closeDrawer = () => {
   console.log("@@CLOSE DRAWER");
   navigationRef.current?.dispatch(DrawerActions.closeDrawer())
+  
 }
 
 export const back = () => {
   console.log("@@BACK DRAWER");
-  navigationRef.current?.dispatch(CommonActions.goBack())
+  navigationRef.current?.dispatch(CommonActions.goBack());    
 }
+
+

@@ -88,21 +88,23 @@ export default class extends React.Component {
 
   render () {
     return <Container>
-      <Header navLeftType='menu' navMiddleType='medium' title='COBRA' statusBarType='dark' />
+      
+      <Header navLeftType='menu' navMiddleType='medium' title='COBRA' statusBarType='dark'  />
 
-      <Content contentContainerStyle={theme.layoutDf}  
+      <Content  contentContainerStyle={theme.layoutDf}  
         refreshControl={
           <RefreshControl
               refreshing={this.state.loadingVehiculosAsignados}
               onRefresh={this._onRefresh}
           />}
           >
-
-        <Featured
-          language={this.state.language}
-          list={this.state.vehiculosAsignados}
-          fetching={this.state.loadingVehiculosAsignados}
-        />
+        
+          <Featured
+            language={this.state.language}
+            list={this.state.vehiculosAsignados}
+            fetching={this.state.loadingVehiculosAsignados}
+          />
+        
 
 {/*        <View style={styles.bookNowBtnInfo}>
           <TouchableOpacity style={styles.bookNowBtn} onPress={this.showDailyReminder}>

@@ -42,8 +42,6 @@ export default class extends React.Component {
       isOpen: false,
       language: 'en',
       photos:[],
-      photo: {url:'',name :'',type : '',uri: '', fileSize: 0, base64:'', source: {uri:''},      
-      nota: ""},
       country: 'hatchback',
       isOpenGallery:false,
       indexPhotoSelected:1,
@@ -51,8 +49,7 @@ export default class extends React.Component {
       fetchingSessionList: true,
       item:null,
       loadingVehiculo:false,
-      ultimoRegistro:null,
-      
+      ultimoRegistro:null
     }
 
     bind(this);
@@ -82,9 +79,8 @@ export default class extends React.Component {
     })
   }
 
-  openGallery(){
-     //this.setState({isOpenGallery:true,indexPhotoSelected:index});
-     this.setState({isOpenGallery:true});
+  openGallery(index){
+     this.setState({isOpenGallery:true,indexPhotoSelected:index});
   }
   
   closeGallery (){
@@ -219,28 +215,13 @@ addPhoto = (res)=>{
 
   console.log("@addPhoto");
       
-  //let array = this.state.photos;
+  let array = this.state.photos;
   
   const assets = res.assets;
 
-  const fotoKm = assets[0] || {};
-
   console.log(assets[0]);
-
-  //-- solo una foto
-  this.setState({
-    photo: {
-          url: fotoKm.uri,
-          name : fotoKm.fileName,
-          type : fotoKm.type,              
-          uri: fotoKm.uri,                  
-          fileSize: fotoKm.fileSize,
-          base64: fotoKm.base64,
-          source: {uri:fotoKm.uri},      
-          nota: ""}
-    });
     
-  /*let assetsArray = assets.map(e => {
+  let assetsArray = assets.map(e => {
     return{
       url: e.uri,
       name : e.fileName,
@@ -256,7 +237,7 @@ addPhoto = (res)=>{
 
   console.log(array);
 
-  this.setState({photos:array});*/
+  this.setState({photos:array});
   
 }
 /*
@@ -291,8 +272,7 @@ replacePhoto = (index,imagePath)=>{
 initEdit (index){
   
   try{
-    //let photo = this.state.photos[index];
-    let photo = this.state.photo;
+    let photo = this.state.photos[index];
 
     console.log("EDITAR LA FOTO"+JSON.stringify(photo));
     //move to other url
@@ -340,73 +320,72 @@ initEdit (index){
               {
                 this.state.loadingVehiculo ? 
                 <ActivityIndicator animating={true} />
-                :                 
-                 <Text style={styles.bookingSubHeaderlTitle}>{`${item && item.marca} ${item && item.clase} ${item && item.modelo} ${item && item.color} `} </Text>                                 
+                : 
+                <Row style={{ paddingBottom:30}} >
+                  <Col style={{flex:1,alignItems:"flex-start"}}>
+                        <Text style={styles.bookingSubHeaderlTitle}>{`${item && item.marca} ${item && item.clase} ${item && item.modelo} ${item && item.color} `} </Text>                 
+                  </Col>
+                  <Col style={{flex:1,alignItems:"flex-end"}}>                                    
+                      <Text style={styles.bookingHeaderlTitleKm}>{`${ ultimoRegistro && ultimoRegistro.kilometraje }km`}</Text>            
+                      <Text style={styles.dateLabel} >{moment(ultimoRegistro && ultimoRegistro.creado,'YYYY-MM-DDThh:mm:ss').fromNow()}</Text>                      
+                  </Col>
+                </Row>                                                   
               }              
           </View>
-           
-       </View>
+
+
+
+       
+          <ListItem icon>            
+            <Left >
+                <Icon  style={{color:"gray",fontSize:20}} name='gauge' type="Entypo" />                        
+            </Left>
+            <Body>
+                <TextInput
+                      placeholder='Escribe aquí el Km'     
+                      keyboardType='numeric'                
+                      style={styles.formInputKilometraje}
+                  />  
+            </Body>
+            <Right >
+                <Icon style={{color:COLOR.lightViolet}} name='camera' type="FontAwesome"  onPress={() => this.cameraLaunch()} />                        
+            </Right>
+          </ListItem>
+       
+       
+        </View>
       </View>
 
-      <Content  contentContainerStyle={theme.layoutDf} refreshing={this.state.loadingVehiculo}>
-                      
-                          
-        {/* padding:25, flex:1, justifyContent:"center",alignContent:"center",alignItems:"center",alignSelf:"center" */ 
-            !this.state.photo.url ?
-                      <Card  style={{padding:10}}>   
-                          <CardItem cardBody>
-                            <Image source={tableroPlaceholder} style={{height: 200, width: null,padding:25, flex:1, justifyContent:"center",alignContent:"center",alignItems:"center",alignSelf:"center" }}/>                          
-                          </CardItem>        
-                          <CardItem footer>
-                            <Body>                            
-                              <Text style={styles.bookingHeaderlTitleKm}>{`${ ultimoRegistro && ultimoRegistro.kilometraje }km`}</Text>            
-                            </Body>                            
-                            <Right>                            
-                              <Text style={styles.dateLabel} >{moment(ultimoRegistro && ultimoRegistro.creado,'YYYY-MM-DDThh:mm:ss').fromNow()}</Text>                      
-                            </Right>
-                          </CardItem>      
-                          <CardItem  footer button onPress={this.launchCamera} >
-                                <Body>
-                                  <Icon style={{color:COLOR.lightViolet}} name='camera' type="FontAwesome"  />                        
-                                  <Text>Actualizar km</Text>
-                                </Body>
-                          </CardItem>         
-                      </Card>
-                       
-                       :
-                       <>
-                       <ListItem thumbnail style={{paddingBottom:5}} onPress={()=>this.openGallery(0)}>                        
-                              <Thumbnail  square                             
+      <Content  contentContainerStyle={theme.layoutDf}>
+
+         {/* imagen placeholder*/ }      
+
+        {
+        this.state.photos.map((e,index)=>     
+          <ListItem thumbnail style={{paddingBottom:5}} onPress={()=>this.openGallery(index)}>                        
+                
+                <Thumbnail  square                             
                                style={{height: 200, width: null, marginEnd:15, flex:1,justifyContent:"center",alignContent:"center",alignSelf:"center"}}
                                source={{ uri: e.uri}} />
-                        </ListItem>                     
-                        <ListItem icon>            
-                            <Left >
-                                <Icon  style={{color:"gray",fontSize:20}} name='gauge' type="Entypo" />                        
-                            </Left>
-                            <Body>
-                                <TextInput
-                                    placeholder='Escribe aquí el Km'     
-                                    keyboardType='numeric'                
-                                    style={styles.formInputKilometraje}
-                                />  
-                            </Body>
-                            <Right >
-                                  <Icon style={{color:COLOR.lightViolet}} name='camera' type="FontAwesome"  onPress={() => this.cameraLaunch()} />                        
-                            </Right>
-                            </ListItem>    
-                      </>
-        }               
+          
+          </ListItem>
+              )
+        }
                     
-        
-        <ImageGallery    
-              initialIndex={0}                            
+        {
+          this.state.photos.length == 0 ?
+             <Thumbnail  square                             
+             style={{height: 200, width: null, marginEnd:15, flex:1,justifyContent:"center",alignContent:"center",alignSelf:"center"}}
+             source={carImage} />
+             : 
+             <ImageGallery    
+              initialIndex={this.state.indexPhotoSelected}                            
               thumbSize={50}
-              images={[this.state.photo]}
+              images={this.state.photos}
               isOpen={this.state.isOpenGallery}                      
               close={this.closeGallery}           
-        />       
-                    
+          />       
+        }            
       </Content>
 
 
@@ -417,7 +396,7 @@ initEdit (index){
         
         <View style={theme.botPop}>
           <TouchableOpacity style={theme.botPopBtn} onPress={() => { /*guardar*/  }}>
-            <Icon  style={{color:"white",fontSize:25}} name='check' type="Entypo" />  
+            <Icon  style={{color:"white",fontSize:25}} name='gauge' type="Entypo" />  
             <Text style={theme.botPopText}>{__('Guardar')}</Text>            
           </TouchableOpacity>
         </View>        

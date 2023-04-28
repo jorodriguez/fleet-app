@@ -9,11 +9,12 @@ import theme from '@theme/styles'
 import Header from '@component/Header'
 import Footer from '@component/Footer'
 
-import { navigate } from '@utility/navigation'
+import { navigate, } from '@utility/navigation'
+
 import { __ } from '@utility/translation'
 import request from '@utility/request'
 import { bind } from '@utility/component'
-import { getUsuarioSesion } from '../../../services/Sesion';
+import { getUsuarioSesion,eliminarSesion } from '../../../services/Sesion';
 
 export default class extends React.Component {
 
@@ -58,6 +59,11 @@ componentDidMount() {
     this.setState({ usuarioSesion: sesion.usuarioSesion, token: sesion.usuarioSesion.token,loading:false });
 }
 
+async logout(){
+  await eliminarSesion();
+  navigate('PublicSignIn');
+}
+
   render () {
     return <Container>
       <Header navLeftType='back' statusBarType='dark' />
@@ -82,7 +88,7 @@ componentDidMount() {
           <View style={styles.myAccountHeader}>
             <View>
               <Text style={styles.myAccountHeaderTitle}>{ this.state.usuarioSesion && this.state.usuarioSesion.nombre}</Text>
-              <Text style={styles.myAccountHeaderText}>{__('Welcome to WECARCARE')}</Text>
+              <Text style={styles.myAccountHeaderText}>{__('Welcome to ')}</Text>
             </View>
             {/*<View style={styles.myAccountContent}>
               <View style={[styles.myAccountInfo, styles.bgBlue]}>
@@ -137,6 +143,15 @@ componentDidMount() {
               <View>
                 <Text style={styles.settingTitle}>{__('SETTINGS')}</Text>
                 <Text style={styles.settingText}>{__('MANAGE YOUR SETTINGS')}</Text>
+              </View>
+              <View>
+                <Icon name='gears' type='FontAwesome' style={[theme.extraHigantic, theme.dark]} />
+              </View>
+            </TouchableOpacity>
+            <TouchableOpacity style={styles.settingCloseSesion} onPress={() => { this.logout()  }}>
+              <View>
+                <Text style={styles.settingTitle}>{__('SALIR')}</Text>
+                <Text style={styles.settingText}>{__('Salir de la app')}</Text>
               </View>
               <View>
                 <Icon name='gears' type='FontAwesome' style={[theme.extraHigantic, theme.dark]} />

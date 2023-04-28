@@ -21,6 +21,7 @@ export const URL = {
     CLIENTE: `${BASE}/cliente/`,
     UPLOAD_PHOTO_CHECKLIST:`${BASE}/checklist/upload`,
     ASIGNACION_VEHICULO:`${BASE}/asignacion`,    
+    KILOMETRAJE:`${BASE}/kilometraje`,    
 };
 
 

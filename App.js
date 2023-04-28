@@ -50,14 +50,17 @@ const forFade = ({ current, closing }) => ({
   }
 })
 
+  
 const options = {
   cardStyleInterpolator: forFade
 }
 
 function DrawerRoot () {
+  
+    
   return (
     <Drawer.Navigator
-      initialRouteName='PublicSplash'
+      initialRouteName={'PublicSplash'}
       drawerContent={(props) => <DrawerContent {...props} />}
       drawerStyle={{ width: width - 100 }}
     >
@@ -98,9 +101,9 @@ export default class App extends React.Component {
     return (
       <NavigationContainer ref={navigationRef}>
         <Stack.Navigator initialRouteName='Drawer' headerMode='none'>
-          <Stack.Screen name='Drawer' component={DrawerRoot} />
+          <Stack.Screen name='Drawer' component={DrawerRoot}  />
 
-          <Drawer.Screen name='PublicSplash' component={PublicSplash}  options={options}/>
+          {/*<Drawer.Screen name='PublicSplash' component={PublicSplash}  options={options}/>*/}
           <Stack.Screen name='PublicLanguage' component={PublicLanguage} options={options} />          
 
           
