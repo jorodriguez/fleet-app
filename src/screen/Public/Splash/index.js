@@ -10,6 +10,7 @@ import {
 
 import AsyncStorage from '@react-native-community/async-storage';
 import { COLOR, FAMILY, SIZE } from '@theme/typography'
+import { navigate } from '@utility/navigation'
 
 const deviceHeight = Dimensions.get("window").height;
 const deviceWidth = Dimensions.get("window").width;
@@ -18,7 +19,9 @@ export default  class extends React.Component{
 
   constructor(props) {
     super(props);
-    
+    this.state={
+      sesionExpirada : false
+    }
   }
 
   async componentDidMount() {    
@@ -38,11 +41,18 @@ export default  class extends React.Component{
   
   // Fetch the token from storage then navigate to our appropriate place
   _bootstrapAsync = async () => {
-    console.log("Revisando sesion");
+    console.log("Revisando sesion - splash");
+    
     const logeado = await AsyncStorage.getItem('logeado');
+
+    console.log("LOGEADO ? "+logeado);
+    
+    this.setState({sesionExpirada : !logeado});        
+
     setTimeout(()=>{
-      this.props.navigation.navigate(logeado ? 'PublicHome' : 'PublicSignIn');
-    },2000);    
+      //this.props.navigation.navigate(logeado ? 'PublicHome' : 'PublicSignIn');
+      navigate(logeado ? 'PublicHome' : 'PublicSignIn');
+    },3000);    
   };
 
   render() {    
@@ -58,6 +68,7 @@ export default  class extends React.Component{
                         hidden={true} />
                         
             <Image source={logoCobra} style={{ resizeMode:"contain",width:200 }}  />                
+            {this.state.sesionExpirada && <Text style={{fontSize:12,color:"white"}} >Sesión Expirada</Text> }
             <ActivityIndicator color={"#fff"} />                
       </View>
     );

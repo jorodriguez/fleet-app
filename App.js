@@ -1,5 +1,5 @@
 import React from 'react'
-import { Dimensions } from 'react-native'
+import { Dimensions,Animated } from 'react-native'
 
 import { NavigationContainer } from '@react-navigation/native'
 import { createStackNavigator } from '@react-navigation/stack'
@@ -33,7 +33,9 @@ import PublicPasswordSuccess from '@screen/Public/PasswordSuccess'
 import PublicConfirmation from '@screen/Public/Confirmation'
 import PublicAboutUs from '@screen/Public/AboutUs'
 import PublicSplash from '@screen/Public/Splash'
-//import ErrorBoundary from '@component/ErrorBoundaries/ErrorBoundary'
+import ErrorBoundary from 'react-native-error-boundary';
+
+
 
 /* Navigation */
 
@@ -45,11 +47,28 @@ const Drawer = createDrawerNavigator()
 
 const { width } = Dimensions.get('window')
 
-const forFade = ({ current, closing }) => ({
+/*const forFade = ({ current, closing }) => ({
   cardStyle: {
     opacity: current.progress
   }
 })
+*/
+const forFade = ({ current, next }) => {
+  const opacity = Animated.add(
+    current.progress,
+    next ? next.progress : 0
+  ).interpolate({
+    inputRange: [0, 1, 2],
+    outputRange: [0, 1, 0],
+  });
+
+  return {
+    leftButtonStyle: { opacity },
+    rightButtonStyle: { opacity },
+    titleStyle: { opacity },
+    backgroundStyle: { opacity },
+  };
+};
 
   
 const options = {
@@ -101,6 +120,9 @@ export default class App extends React.Component {
     })
   }
 
+    
+  
+
   render () {
     if (!this.state.isAppInitiated) {
       return null
@@ -109,7 +131,7 @@ export default class App extends React.Component {
     return (
       
       <NavigationContainer ref={navigationRef}>
-        <Stack.Navigator initialRouteName='Drawer' headerMode='none'>
+        <Stack.Navigator initialRouteName='Drawer' headerMode='none' >
           <Stack.Screen name='Drawer' component={DrawerRoot}  />
 
           <Drawer.Screen name='PublicSplash' component={PublicSplash}  options={options}/>

@@ -1,4 +1,12 @@
-import { getUsuarioSesion } from '../services/Sesion';
+import { getUsuarioSesion, eliminarSesion } from '../services/Sesion';
+
+/* 
+TO-FIX: Mejorrar esta parte para cachar la expiracion de sesión, Error boundary no funciona por que se hace en algunos lados se llama con settimeout
+*/
+import React from 'react'
+import { Alert } from 'react-native';
+import { navigate } from '@utility/navigation';
+
 
 /*
 Error de expiracion de sesion
@@ -15,10 +23,9 @@ class Http {
     static instance = new Http();
 
     async get(url) {
-        //try {
+        try {
 
-            const sesion = await getUsuarioSesion();
-            const token = sesion.usuarioSesion.accessToken;
+            const token =  await this.getTokenSesion();
 
             console.log("TOKEN SEND " + token);
 
@@ -30,24 +37,20 @@ class Http {
             });
 
             const json = await req.json();
-
-            console.log(json);
-
-            if (json.status == 401 && json.tokenExpired) {
-                throw new Error("Sesion expirada");
-            }
+                        
+            this.revisarSesion(json);
 
             return json;
-        /*} catch (error) {
+        } catch (error) {
             console.log(`http get error url = ${url}`, error);
             throw new Error(error);
-        }*/
+        }
     }
 
     async getRequest(url) {
         try {
-            const sesion = await getUsuarioSesion();
-            const token = sesion.usuarioSesion.accessToken;
+
+            const token =  await this.getTokenSesion();
 
             return fetch(url, {
                 method: 'GET',
@@ -66,9 +69,7 @@ class Http {
     async postFile(url, bodyFormData) {
         try {
 
-            const sesion = await getUsuarioSesion();
-
-            const token = sesion.usuarioSesion.accessToken;
+            const token =  await this.getTokenSesion();
 
             const req = await fetch(url, {
                 method: 'POST',
@@ -79,6 +80,9 @@ class Http {
                 body: bodyFormData
             });
             const json = await req.json();
+            
+            this.revisarSesion(json);
+
             return json;
         } catch (error) {
             console.log(`http postFile form data error url = ${url} `, error);
@@ -89,9 +93,7 @@ class Http {
     async post(url, body) {
         try {
 
-            const sesion = await getUsuarioSesion();
-
-            const token = sesion.usuarioSesion.accessToken;
+            const token =  await this.getTokenSesion();
 
             const req = await fetch(url, {
                 method: 'POST',
@@ -101,7 +103,11 @@ class Http {
                 }),
                 body: JSON.stringify(body)
             });
+            
             const json = await req.json();
+            
+            this.revisarSesion(json);
+            
             return json;
         } catch (error) {
             console.log(`http post error url = ${url} `, error);
@@ -113,9 +119,8 @@ class Http {
 
     async postRequest(url, body) {
         try {
-            const sesion = await getUsuarioSesion();
 
-            const token = sesion.usuarioSesion.accessToken;
+            const token =  await this.getTokenSesion();
 
             return await fetch(url, {
                 method: 'POST',
@@ -133,6 +138,9 @@ class Http {
 
     async put(url, id, body) {
         try {
+
+            const token =  await this.getTokenSesion();
+
             const req = fetch(`${url}/${id}`, {
                 method: 'PUT',
                 headers: {
@@ -143,6 +151,9 @@ class Http {
             });
 
             const json = await req.json();
+            
+            this.revisarSesion(json);
+
             return json;
         } catch (error) {
             console.log(`http put error url = ${url} id =${id} body =${JSON.stringify(body)}`, error);
@@ -152,9 +163,8 @@ class Http {
 
     async delete(url, id, body) {
         try {
-            const sesion = await getUsuarioSesion();
 
-            const token = sesion.usuarioSesion.accessToken;
+            const token =  await this.getTokenSesion();
 
             const req = await fetch(`${url}/${id}`, {
                 method: 'DELETE',
@@ -166,6 +176,9 @@ class Http {
             });
 
             const json = req.json();
+
+            this.revisarSesion(json);
+
             return json;
         } catch (error) {
             console.log(`http put error url = ${url} id =${id} body =${JSON.stringify(body)}`, error);
@@ -175,9 +188,9 @@ class Http {
 
     async deleteRequest(url, body) {
         try {
-            const sesion = await getUsuarioSesion();
+            
+            const token =  await this.getTokenSesion();
 
-            const token = sesion.usuarioSesion.accessToken;
             return fetch(`${url}`, {
                 method: 'DELETE',
                 headers: {
@@ -190,6 +203,44 @@ class Http {
             console.log(`http put error url = ${url}  body =${JSON.stringify(body)}`, error);
             throw new Error(error);
         }
+    }
+
+    async revisarSesion(response){
+
+        if (response.status == 401 && response.tokenExpired) {
+        
+            console.log("LANZANDO ERROR ");
+            
+            await eliminarSesion();
+        
+            //navigate("PublicSignIn");            
+            navigate("PublicSplash");
+            
+            //Alert.alert("SESION","SSSS"+json);
+            //throw new Error("Sesion expirada");
+
+        }
+    }
+
+    async getTokenSesion(){
+        
+        console.log("@getTokenSesion");
+        
+        const sesion = await getUsuarioSesion();
+
+        if(!sesion){
+            console.log("X no hay sesion en el store - redireccion al login X");
+            
+            await eliminarSesion();
+
+            navigate("PublicSplash");
+            //navigate("PublicSignIn");            
+        }
+
+        console.log(" token en sesion "+sesion.usuarioSesion.accessToken)
+
+        return sesion.usuarioSesion.accessToken;
+
     }
 
 }

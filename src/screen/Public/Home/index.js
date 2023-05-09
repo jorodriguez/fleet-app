@@ -58,6 +58,7 @@ export default class extends React.Component {
 
 
   async componentDidMount () {
+    console.log("@montando home");
     const language = await AsyncStorage.getItem('language')
     await this.promisedSetState({
       language
@@ -75,6 +76,7 @@ export default class extends React.Component {
 
     const list = await getAsignacionVehiculo();
 
+    
     await this.promisedSetState({
       vehiculosAsignados: list,
       loadingVehiculosAsignados: false

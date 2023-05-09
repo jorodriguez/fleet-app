@@ -92,11 +92,14 @@ handleLogin = async (data) => {
       let realizado = await setUsuarioSesion(this.login);
 
       if (realizado) {               
-          console.log("Redireccionando a Splash");
+          console.log("Redireccionando a Splash");         
           
-          this.setState({ loading: false, email: "", password: "", secureTextEntry: true });                
           console.log("Direccionando a splash");
-          this.props.navigation.navigate('PublicSplash', { usuario: this.login.usuario });
+          setTimeout(() => {
+              //this.props.navigation.navigate('PublicSplash', { usuario: this.login.usuario });
+              this.setState({ loading: false, email: "", password: "", secureTextEntry: true });                
+              navigate('PublicSplash', { usuario: this.login.usuario });
+        }, 3000); 
       } else {
            Alert.alert("Error", "Sucedió un detalle por favor contacte a nuestro equipo de soporte.") 
       }
