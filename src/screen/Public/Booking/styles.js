@@ -347,16 +347,44 @@ export default {
         marginVertical: 20,
         marginHorizontal: 20
     },
+    confirmOrderBtnDisabled: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'space-between',
+        backgroundColor: COLOR.smoke,
+        color:COLOR.grey,
+        borderRadius: 5,
+        paddingVertical: 15,
+        paddingHorizontal: 20,
+        marginVertical: 20,
+        marginHorizontal: 20
+    },
+    closeOrderBtn: {
+        flexDirection: 'row',
+        alignItems: 'center',        
+        justifyContent: 'center',
+        backgroundColor: COLOR.grey,
+        borderRadius: 5,
+        paddingVertical: 15,
+        paddingHorizontal: 20,
+        marginVertical: 20,
+        marginHorizontal: 20
+    },
     confirmBtnText: {
         fontFamily: FAMILY.bold,
         fontSize: SIZE.small,
         color: COLOR.light
     },
+    closeBtnText: {
+        fontFamily: FAMILY.bold,
+        fontSize: SIZE.small,
+        color: COLOR.greyDark
+    },
 
     /* --Modal-- */
     mConfirmBox: {
         width: '90%',
-        height: '60%',
+        height: '68%',
         borderWidth: 1,
         borderColor: 'rgba(0,0,0,0.03)',
         borderRadius: 5

@@ -23,12 +23,12 @@ export default class extends React.Component {
               <View style={styles.passwordHeader}>
                 <Icon name='lock' type='FontAwesome' style={[theme.extraBig, theme.dark]} />
                 <View style={styles.changePasswordHeader}>
-                  <Text style={styles.passwordHeaderTitle}>{__('Settings')}</Text>
-                  <Text style={styles.passwordHeaderText}>{__('Change your password')}</Text>
+                  <Text style={styles.passwordHeaderTitle}>{__('Configuración')}</Text>
+                  <Text style={styles.passwordHeaderText}>{__('Cambio de password')}</Text>
                 </View>
               </View>
               <View>
-                <Text style={styles.formText}>{__('NEW PASSWORD')}</Text>
+                <Text style={styles.formText}>{__('NUEVO PASSWORD')}</Text>
                 <View style={styles.formRow}>
                   <TextInput
                     placeholder='* * * * * * * * * *'
@@ -37,7 +37,7 @@ export default class extends React.Component {
                   />
                   <Icon name='lock' type='FontAwesome' style={[theme.huge, theme.smoke]} />
                 </View>
-                <Text style={styles.formText}>{__('CONFIRM NEW PASSWORD')}</Text>
+                <Text style={styles.formText}>{__('CONFIRMA PASSWORD')}</Text>
                 <View style={styles.formRow}>
                   <TextInput
                     placeholder='* * * * * * * * * *'
@@ -46,7 +46,7 @@ export default class extends React.Component {
                   />
                   <Icon name='lock' type='FontAwesome' style={[theme.huge, theme.smoke]} />
                 </View>
-                <TouchableOpacity style={styles.saveBtn}>
+                <TouchableOpacity disabled style={styles.saveBtn}>
                   <Text style={styles.saveBtnText}>{__('SAVE')}</Text>
                   <Icon name='arrowright' type='AntDesign' style={[theme.huge, theme.light]} />
                 </TouchableOpacity>

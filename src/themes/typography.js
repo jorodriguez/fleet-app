@@ -5,6 +5,7 @@ export const FAMILY = {
 
 export const COLOR = {
   primary: 'rgba(255, 255, 255, 0.7)',
+  blue: 'rgba(64, 146, 173, 0.7)',
   default: 'rgba(255, 255, 255, 0.8)',
   dark: 'rgba(0, 0, 0, 1)',
   light: 'rgba(255, 255, 255, 1)',

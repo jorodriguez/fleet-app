@@ -1,49 +1,59 @@
 import { getUsuarioSesion } from '../services/Sesion';
 
+/*
+Error de expiracion de sesion
+    error: "Unauthorized"
+    message: "Full authentication is required to access this resource"
+    path: "/asignacion/usuario"
+    status: 401
+    tokenExpired: true
+*/
 
 class Http {
 
     //Singleton de esta clase
     static instance = new Http();
 
-    async get(url) {        
-        try {
-            
-            const sesion =  await getUsuarioSesion();            
+    async get(url) {
+        //try {
+
+            const sesion = await getUsuarioSesion();
             const token = sesion.usuarioSesion.accessToken;
 
-            console.log("TOKEN SEND "+token);
+            console.log("TOKEN SEND " + token);
 
-            const req = await fetch(url,{
-                method:'GET',
+            const req = await fetch(url, {
+                method: 'GET',
                 headers: new Headers({
-                        'Authorization':`Bearer ${token}`
+                    'Authorization': `Bearer ${token}`
                 })
             });
-            const json = await req.json();            
+
+            const json = await req.json();
+
             console.log(json);
-            
-            if(json.status == 401){
-                throw new Error("Sesion expirada");        
+
+            if (json.status == 401 && json.tokenExpired) {
+                throw new Error("Sesion expirada");
             }
 
             return json;
-        } catch (error) {
+        /*} catch (error) {
             console.log(`http get error url = ${url}`, error);
             throw new Error(error);
-        }
+        }*/
     }
 
     async getRequest(url) {
-        try {             
-            const sesion =  await getUsuarioSesion();            
+        try {
+            const sesion = await getUsuarioSesion();
             const token = sesion.usuarioSesion.accessToken;
 
-            return fetch(url,{
-                method:'GET',
+            return fetch(url, {
+                method: 'GET',
                 headers: new Headers({
-                        'Authorization':`Bearer ${token}`,
-                        'Content-Type': "application/json"
+                    'Authorization': `Bearer ${token}`,
+                    'Content-Type': "application/json"
                 })
             });
         } catch (error) {
@@ -56,15 +66,15 @@ class Http {
     async postFile(url, bodyFormData) {
         try {
 
-            const sesion =  await getUsuarioSesion();            
-            
+            const sesion = await getUsuarioSesion();
+
             const token = sesion.usuarioSesion.accessToken;
 
             const req = await fetch(url, {
                 method: 'POST',
                 headers: new Headers({
-                    'Authorization':`Bearer ${token}`,       
-                    'Content-Type': 'multipart/form-data'                 
+                    'Authorization': `Bearer ${token}`,
+                    'Content-Type': 'multipart/form-data'
                 }),
                 body: bodyFormData
             });
@@ -79,14 +89,14 @@ class Http {
     async post(url, body) {
         try {
 
-            const sesion =  await getUsuarioSesion();            
-            
+            const sesion = await getUsuarioSesion();
+
             const token = sesion.usuarioSesion.accessToken;
 
             const req = await fetch(url, {
                 method: 'POST',
                 headers: new Headers({
-                    'Authorization':`Bearer ${token}`,       
+                    'Authorization': `Bearer ${token}`,
                     'Content-Type': "application/json"
                 }),
                 body: JSON.stringify(body)
@@ -103,18 +113,18 @@ class Http {
 
     async postRequest(url, body) {
         try {
-            const sesion =  await getUsuarioSesion();            
-            
+            const sesion = await getUsuarioSesion();
+
             const token = sesion.usuarioSesion.accessToken;
 
             return await fetch(url, {
                 method: 'POST',
                 headers: {
-                    'Authorization':`Bearer ${token}`,  
+                    'Authorization': `Bearer ${token}`,
                     'Content-Type': "application/json"
                 },
-                body: JSON.stringify(body)                
-            });                        
+                body: JSON.stringify(body)
+            });
         } catch (error) {
             console.log(`http post error url = ${url} body =${JSON.stringify(body)}`, error);
             throw new Error(error);
@@ -126,10 +136,10 @@ class Http {
             const req = fetch(`${url}/${id}`, {
                 method: 'PUT',
                 headers: {
-                    'Authorization':`Bearer ${token}`,      
+                    'Authorization': `Bearer ${token}`,
                     'Content-Type': "application/json"
                 },
-                body: JSON.stringify(body)                
+                body: JSON.stringify(body)
             });
 
             const json = await req.json();
@@ -142,17 +152,17 @@ class Http {
 
     async delete(url, id, body) {
         try {
-            const sesion =  await getUsuarioSesion();            
-            
+            const sesion = await getUsuarioSesion();
+
             const token = sesion.usuarioSesion.accessToken;
 
             const req = await fetch(`${url}/${id}`, {
                 method: 'DELETE',
                 headers: {
-                    'Authorization':`Bearer ${token}`,       
+                    'Authorization': `Bearer ${token}`,
                     'Content-Type': "application/json"
                 },
-                body: JSON.stringify(body)                
+                body: JSON.stringify(body)
             });
 
             const json = req.json();
@@ -165,17 +175,17 @@ class Http {
 
     async deleteRequest(url, body) {
         try {
-            const sesion =  await getUsuarioSesion();            
-            
+            const sesion = await getUsuarioSesion();
+
             const token = sesion.usuarioSesion.accessToken;
             return fetch(`${url}`, {
                 method: 'DELETE',
                 headers: {
-                    'Authorization':`Bearer ${token}`,       
+                    'Authorization': `Bearer ${token}`,
                     'Content-Type': "application/json"
                 },
-                body: JSON.stringify(body)                
-            });                        
+                body: JSON.stringify(body)
+            });
         } catch (error) {
             console.log(`http put error url = ${url}  body =${JSON.stringify(body)}`, error);
             throw new Error(error);

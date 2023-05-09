@@ -4,10 +4,27 @@ const React = require('react-native')
 const { Platform } = React
 
 export default {
+    layoutDf: {
+        flex: 1,
+        marginVertical: 30,        
+      //  backgroundColor:"green"
+    },
     bgImg: {
         width: '100%',
         bottom: 0,
         zIndex: 4
+    },
+    logoCobra: {
+        bottom: 0,
+        zIndex: 4,
+        width: 50,
+        height: 30
+    },
+    logoLogin: {
+        bottom: 0,
+        width: 150,
+        height: 100,
+        borderWidth:1
     },
     bgCover: {
         flex: 1,
@@ -23,7 +40,7 @@ export default {
         zIndex: 3,
         width: '100%',
         height: '100%',
-
+        
     },
     bgMainLayout: {
         flex: 1,
@@ -34,17 +51,19 @@ export default {
         borderTopLeftRadius: 30,
         borderTopRightRadius: 30
     },
+
     actBarBtn: {
         flexDirection: 'row',
         alignItems: 'center',
-        alignSelf: 'flex-start',
-        padding: 10
+        alignSelf: 'flex-end',
+        margin: 10,
+      //  backgroundColor:"green"
     },
 
     /** -- Content --**/
     signInForm: {
-        marginHorizontal: 20,
-        marginTop: 30
+        marginHorizontal: 20,        
+      //  backgroundColor:"yellow"
     },
     signInTitle: {
         fontFamily: FAMILY.bold,
@@ -56,26 +75,29 @@ export default {
     formText: {
         fontFamily: FAMILY.bold,
         fontSize: SIZE.small,
-        color: 'rgba(65, 65, 65, 1)'
+        //color: 'rgba(65, 65, 65, 1)'
+        color: "white"
     },
     formRow: {
         flexDirection: 'row',
         alignItems: 'center',
         justifyContent: 'space-between',
         borderBottomWidth: 1,
-        borderColor: COLOR.smokeLight,
+        borderColor: "white",
         marginBottom: 30
     },
     formInput: {
         flex: 1,
         fontFamily: FAMILY.bold,
         fontSize: SIZE.medium,
-        color: COLOR.dark
+        //color: COLOR.dark
+        color: "white"
     },
     forgotText: {
-        fontFamily: FAMILY.bold,
-        fontSize: SIZE.medium,
-        color: COLOR.grey,
+        fontFamily: FAMILY.regular,
+        fontSize: SIZE.small,
+        //color: COLOR.grey,
+        color: "gray",
         alignSelf: 'flex-end',
     },
     loginBtn: {
@@ -90,7 +112,7 @@ export default {
     },
     loginBtnText: {
         fontFamily: FAMILY.bold,
-        fontSize: SIZE.medium,
+        fontSize: SIZE.small,
         color: COLOR.light
     },
     createAccountInfo: {
@@ -101,13 +123,15 @@ export default {
     customerText: {
         fontFamily: FAMILY.regular,
         fontSize: SIZE.medium,
-        color: COLOR.grey,
+        //color: COLOR.grey,
+        color: "gray",
         marginRight: 10
     },
     createBtnText: {
         fontFamily: FAMILY.bold,
-        fontSize: SIZE.medium,
-        color: COLOR.dark
+        fontSize: SIZE.small,
+        //color: COLOR.dark
+        color: "gray",
     },
 
     /**/
@@ -115,7 +139,7 @@ export default {
         flex: 1,
         justifyContent: 'center',
         alignItems: 'center',
-        backgroundColor: "#6BADC7",
+        backgroundColor: COLOR.violet
     },
     backgroundImage: {
         flex: 1,
@@ -170,7 +194,7 @@ export default {
         backgroundColor: 'transparent'
     },
     loginButton: {
-        backgroundColor:  COLOR.red,
+        backgroundColor: COLOR.red,
         shadowColor: "#808080",
         shadowOffset: {
             width: 0,

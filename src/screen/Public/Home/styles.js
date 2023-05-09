@@ -5,6 +5,17 @@ const React = require('react-native')
 const { Platform } = React
 
 export default {
+  contentedorVehiculos: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: COLOR.violet,
+    borderRadius: 0,
+    paddingVertical: 0,
+    paddingHorizontal: 20,
+    marginHorizontal: 0,
+    marginBottom: 0
+  },
   bookNowBtnInfo: {
     backgroundColor: COLOR.violet,
     paddingBottom: 15

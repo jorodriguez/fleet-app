@@ -7,11 +7,18 @@ export default {
 
     /* Layout */
 
+    layoutBack: {        
+        backgroundColor: 'rgba(89,73,158,0.1)',       
+    },
+
     layoutDf: {
-        flexGrow: 1,
-        backgroundColor: 'rgba(89,73,158,0.1)',
-        
-        
+        flexGrow: 1,                        
+        backgroundColor: 'rgba(89,73,158,0.1)',                       
+    },
+
+    layoutHome: {
+        flexGrow: 1,              
+        backgroundColor: COLOR.violet,               
     },
 
     layoutFx: {
@@ -294,7 +301,7 @@ export default {
         borderRadius: 50,
         justifyContent: 'center',
         alignItems: 'center',
-        backgroundColor: COLOR.bluedarkViolet,
+        backgroundColor: COLOR.blue,
         marginBottom: -15
     },
     botPopTextGuardar: {
@@ -369,6 +376,11 @@ export default {
         fontSize: SIZE.small,
         color: COLOR.default
 
-    }
+    },
+    textSm: {
+        fontFamily: FAMILY.regular,
+        fontSize: 12,
+        color: 'rgba(255,255,255,1)'
+    },
 
 }

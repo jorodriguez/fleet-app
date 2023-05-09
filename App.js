@@ -33,6 +33,7 @@ import PublicPasswordSuccess from '@screen/Public/PasswordSuccess'
 import PublicConfirmation from '@screen/Public/Confirmation'
 import PublicAboutUs from '@screen/Public/AboutUs'
 import PublicSplash from '@screen/Public/Splash'
+//import ErrorBoundary from '@component/ErrorBoundaries/ErrorBoundary'
 
 /* Navigation */
 
@@ -82,6 +83,13 @@ export default class App extends React.Component {
     this.checkIsAppInitiated = this.checkIsAppInitiated.bind(this)
   }
 
+  static getDerivedStateFromError(error) {
+    console.log("x x x x  x x x x x x x x x x x x  x x x x x x x x x");
+    console.log(" "+error);
+    console.log("x x x x  x x x x x x x x x x x x  x x x x x x x x x");
+    return { hasError: true };
+  }
+
   async componentDidMount () {
     await this.checkIsAppInitiated()
   }
@@ -99,11 +107,12 @@ export default class App extends React.Component {
     }
 
     return (
+      
       <NavigationContainer ref={navigationRef}>
         <Stack.Navigator initialRouteName='Drawer' headerMode='none'>
           <Stack.Screen name='Drawer' component={DrawerRoot}  />
 
-          {/*<Drawer.Screen name='PublicSplash' component={PublicSplash}  options={options}/>*/}
+          <Drawer.Screen name='PublicSplash' component={PublicSplash}  options={options}/>
           <Stack.Screen name='PublicLanguage' component={PublicLanguage} options={options} />          
 
           
@@ -129,6 +138,7 @@ export default class App extends React.Component {
 
         </Stack.Navigator>
       </NavigationContainer>
+      
     )
   }
 }

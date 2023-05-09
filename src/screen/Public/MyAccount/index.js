@@ -88,7 +88,7 @@ async logout(){
           <View style={styles.myAccountHeader}>
             <View>
               <Text style={styles.myAccountHeaderTitle}>{ this.state.usuarioSesion && this.state.usuarioSesion.nombre}</Text>
-              <Text style={styles.myAccountHeaderText}>{__('Welcome to ')}</Text>
+              <Text style={styles.myAccountHeaderText}>{__('Versión 0.1 ')}</Text>
             </View>
             {/*<View style={styles.myAccountContent}>
               <View style={[styles.myAccountInfo, styles.bgBlue]}>
@@ -132,8 +132,8 @@ async logout(){
             */}
             <TouchableOpacity style={styles.settingInfo} onPress={() => { navigate('PublicProfile') }}>
               <View>
-                <Text style={styles.settingTitle}>{__('PROFILE')}</Text>
-                <Text style={styles.settingText}>{__('MANAGE YOUR PROFILE INFOS')}</Text>
+                <Text style={styles.settingTitle}>{__('MY PERFIL')}</Text>
+                <Text style={styles.settingText}>{__('Manejo de información de perfil')}</Text>
               </View>
               <View>
                 <Icon name='user' type='FontAwesome' style={[theme.extraHigantic, theme.dark]} />
@@ -142,7 +142,7 @@ async logout(){
             <TouchableOpacity style={styles.settingInfo} onPress={() => { navigate('PublicChangePassword') }}>
               <View>
                 <Text style={styles.settingTitle}>{__('SETTINGS')}</Text>
-                <Text style={styles.settingText}>{__('MANAGE YOUR SETTINGS')}</Text>
+                <Text style={styles.settingText}>{__('Administra tus credenciales de acceso')}</Text>
               </View>
               <View>
                 <Icon name='gears' type='FontAwesome' style={[theme.extraHigantic, theme.dark]} />
@@ -154,7 +154,7 @@ async logout(){
                 <Text style={styles.settingText}>{__('Salir de la app')}</Text>
               </View>
               <View>
-                <Icon name='gears' type='FontAwesome' style={[theme.extraHigantic, theme.dark]} />
+                <Icon name='sign-out' type='FontAwesome' style={[theme.extraHigantic, theme.dark]} />
               </View>
             </TouchableOpacity>
           </View>
@@ -162,7 +162,7 @@ async logout(){
         )}
       </Content>
 
-      <Footer currentScreen='Profile' />
+
     </Container>
   }
 }

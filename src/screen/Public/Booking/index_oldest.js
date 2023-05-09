@@ -28,7 +28,7 @@ import {launchCamera, launchImageLibrary} from 'react-native-image-picker';
 import { ImageGallery } from '@georstat/react-native-image-gallery';
 import PhotoEditor from 'react-native-photo-editor';
 
-import { getUltimoRegistro } from './../../../services/KilometrajeVehiculoService';
+import { getUltimoRegistro } from '../../../services/KilometrajeVehiculoService';
 
 export default class extends React.Component {
   constructor (props) {

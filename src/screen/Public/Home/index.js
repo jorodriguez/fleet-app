@@ -89,21 +89,24 @@ export default class extends React.Component {
   render () {
     return <Container>
       
-      <Header navLeftType='menu' navMiddleType='medium' title='COBRA' statusBarType='dark'  />
+      <Header navLeftType='menu' navMiddleType='medium' title='Mis Vehículos' statusBarType='dark'  />
 
-      <Content  contentContainerStyle={theme.layoutDf}  
+      <Content  contentContainerStyle={theme.layoutHome}  
         refreshControl={
           <RefreshControl
               refreshing={this.state.loadingVehiculosAsignados}
               onRefresh={this._onRefresh}
           />}
           >
-        
-          <Featured
-            language={this.state.language}
-            list={this.state.vehiculosAsignados}
-            fetching={this.state.loadingVehiculosAsignados}
-          />
+          <View style={styles.contentedorVehiculos}>
+              <Featured
+                language={this.state.language}
+                list={this.state.vehiculosAsignados}
+                fetching={this.state.loadingVehiculosAsignados}
+              />
+          </View>
+
+          
         
 
 {/*        <View style={styles.bookNowBtnInfo}>
@@ -145,8 +148,6 @@ export default class extends React.Component {
       }
       
       <Footer currentScreen='Home' />
-
-
     </Container>
   }
 }

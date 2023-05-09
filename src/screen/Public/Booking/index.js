@@ -1,7 +1,8 @@
 import React from 'react'
-import { TouchableOpacity, Image, ScrollView,  FlatList,TextInput} from 'react-native'
-import { ActivityIndicator, MD2Colors } from 'react-native-paper';
-import { Container, Content, Icon, Text, View ,Alert,Card,CardItem, Button, Right,Left,Body,List,ListItem,Thumbnail,Input, Footer,Item} from 'native-base'
+import { TouchableOpacity, Image, ScrollView,  FlatList,TextInput,Alert,StyleSheet,Dimensions,Keyboard} from 'react-native'
+
+import { ActivityIndicator, MD2Colors, } from 'react-native-paper';
+import { Container, Content, Icon, Text, View ,Card,CardItem, Button, Right,Left,Body,List,ListItem,Thumbnail,Input, Footer,Item,Toast} from 'native-base'
 import AsyncStorage from '@react-native-community/async-storage'
 import { Col, Row, Grid } from 'react-native-easy-grid';
 import { } from 'rn-placeholder'
@@ -28,7 +29,9 @@ import {launchCamera, launchImageLibrary} from 'react-native-image-picker';
 import { ImageGallery } from '@georstat/react-native-image-gallery';
 import PhotoEditor from 'react-native-photo-editor';
 
-import { getUltimoRegistro } from './../../../services/KilometrajeVehiculoService';
+
+import { getUltimoRegistro, guardarKilometraje } from './../../../services/KilometrajeVehiculoService';
+import { getImageUuid } from './../../../services/Adjuntos';
 
 export default class extends React.Component {
   constructor (props) {
@@ -51,8 +54,13 @@ export default class extends React.Component {
       fetchingSessionList: true,
       item:null,
       loadingVehiculo:false,
+      loadingGuardar:false,
+      loadingImagen:false,
       ultimoRegistro:null,
-      
+      kilometraje:"",
+      responseOk:false,
+      responseError:false,
+      disabledButtonGuardar:false,
     }
 
     bind(this);
@@ -102,11 +110,9 @@ export default class extends React.Component {
     await this.promisedSetState({
       language
     });
-
-
-
     //await this.fetchSessionList()
     this.settingParams();
+    
   }
 
   settingParams(){
@@ -135,22 +141,48 @@ export default class extends React.Component {
 
   async init(){
     console.log("@load vehicle "+this.state.item.uuid);
-    
+   // this.refs.ModalSucessful.close();
+
     //ultimo registro de km
      const list = await getUltimoRegistro(this.state.item.uuid);
 
      const ultimoRegistro = (list.length > 0) ? list[0] : null;
+     
+     this.setState({ultimoRegistro:ultimoRegistro, 
+                    photo: {url:'',name :'',type : '',uri: '', fileSize: 0, base64:'', source: {uri:''}}, 
+                    kilometraje:0,
+                    disabledButtonGuardar:false,
+                    loadingVehiculo:false}
+                  );                  
+  //  await this.cargarImageUuid();
+  }
 
-     console.log(ultimoRegistro);
 
-    this.setState({ultimoRegistro:ultimoRegistro, loadingVehiculo:false});      
+  async cargarImageUuid(){
+    
+    this.setState({ loadingImagen:true});
+
+    const adjuntoDto = await getImageUuid(this.state.ultimoRegistro.idAlmacenamiento);
+
+    const ultimoRegistro = this.state.ultimoRegistro;
+
+    console.log("====> "+adjuntoDto);
+
+    ultimoRegistro.base64 = adjuntoDto.encodeString;
+    
+    this.setState({ ultimoRegistro : ultimoRegistro,loadingImagen:false});
 
   }
 
-/*Permisos*/
-cameraPermission = async () => {
+  getImageSource () {   
+    return `data:${this.state.ultimoRegistro && this.state.ultimoRegistro.tipo};base64,${this.state.ultimoRegistro && this.state.ultimoRegistro.base64}`;
+  }
 
-  const granted = await PermissionsAndroid.request(PermissionsAndroid.PERMISSIONS.CAMERA);
+
+ /*Permisos*/
+ cameraPermission = async () => {
+
+  const granted = await PermissionsAndroid.request( PermissionsAndroid.PERMISSIONS.CAMERA );
 
   if(granted === PermissionsAndroid.RESULTS.GRANTED) {
     // if get here, the user has accepted the permissions
@@ -158,7 +190,8 @@ cameraPermission = async () => {
   } else {
     // if get here, the user did NOT accepted the permissions
   }
-}
+
+ }
 
 cameraLaunch = async () => {
 
@@ -171,6 +204,7 @@ try{
       saveToPhotos: true,
       skipBackup: true,
       path: 'checklist',
+    
     },
   };
 
@@ -239,6 +273,8 @@ addPhoto = (res)=>{
           source: {uri:fotoKm.uri},      
           nota: ""}
     });
+
+  //  this.initEdit();
     
   /*let assetsArray = assets.map(e => {
     return{
@@ -288,7 +324,7 @@ replacePhoto = (index,imagePath)=>{
   
 }*/
 
-initEdit (index){
+initEdit (){
   
   try{
     //let photo = this.state.photos[index];
@@ -306,6 +342,101 @@ initEdit (index){
   }
 }
 
+iniciarGuardar (){
+  //validar con el ultimo km
+  if( this.state.kilometraje < this.state.ultimoRegistro.kilometraje){
+      Alert.alert("Revisar","Revise su captura, el kilometraje capturado es menor al anterior.")    
+      return;
+  }
+
+  Keyboard.dismiss();
+
+  setTimeout(()=>{ 
+    this.refs.ModalSucessful.open();
+  },500);
+
+  
+ 
+
+  //--realizar el guardado  Z>>>>>>>>>>>>>>>>>>AQUI VOY
+  /*Alert.alert(
+    `Kilometraje `,
+    `¿Confirma que desea actualizar el Kilometraje?`,
+    [{
+      text: "Cerrar",
+      onPress: () => { },
+      style: "cancel",
+    },
+    {
+      text: `Aceptar`,
+      onPress: () => {                    
+        this.guardar();
+      }
+    },
+    ], {
+    cancelable: true,
+    onDismiss: () => { }
+  }
+  );  */
+}
+
+async guardar (){
+  
+  console.log("@ guardar kilometraje");
+  try{
+
+  await this.promisedSetState({loadingGuardar: true,responseOk:false});
+
+  const formData = new FormData();
+
+  formData.append("foto",{
+    name: this.state.photo.name,
+    type: this.state.photo.type,
+    uri:  this.state.photo.uri,
+    fileSize: this.state.photo.fileSize        
+  });
+  
+  formData.append('vehiculoUuid',`${this.state.item.uuid}`);   
+  formData.append('kilometraje',`${this.state.kilometraje}`);   
+  formData.append('nota',`${this.state.nota}`);   
+
+  const response =  await guardarKilometraje(formData);  
+
+  console.log(response);
+  
+  //await this.promisedSetState({loadingGuardar: false,responseOk:true});
+  await this.promisedSetState({responseOk:true});
+
+  setTimeout(()=>{ 
+    this.setState({ loadingVehiculo:true,loadingGuardar: false},async ()=>{      
+      this.refs.ModalSucessful.close();
+      await this.init();            
+      await this.cargarImageUuid();      
+    });  
+  },2500);
+
+  //this.refs.ModalSucessful.open();
+
+  //
+/*
+  this.setState({ loadingVehiculo:true},async ()=>{
+    await this.init();
+  });*/
+
+  }catch(e){
+    console.log(e);
+    Alert.alert("¡Ups!","Sucedió un error al intentar subir la foto."+e);
+    this.setState({responseError:true});
+  }
+}
+
+buttonOk(){
+
+  this.setState({ loadingVehiculo:true},async ()=>{
+    await this.init();    
+  });
+ 
+}
 
   async fetchSessionList () {
     await this.promisedSetState({
@@ -335,8 +466,7 @@ initEdit (index){
         <View style={styles.bookingContent}>
             
             <View style={styles.bookingHeader}>                                           
-              <Text style={styles.bookingHeaderlTitle}>{__('Kilometraje ')}</Text>            
-
+              <Text style={styles.bookingHeaderlTitle}>{__('Kilometraje ')}</Text>           
               {
                 this.state.loadingVehiculo ? 
                 <ActivityIndicator animating={true} />
@@ -353,32 +483,49 @@ initEdit (index){
                           
         {/* padding:25, flex:1, justifyContent:"center",alignContent:"center",alignItems:"center",alignSelf:"center" */ 
             !this.state.photo.url ?
-                      <Card  style={{padding:10}}>   
-                          <CardItem cardBody>
-                            <Image source={tableroPlaceholder} style={{height: 200, width: null,padding:25, flex:1, justifyContent:"center",alignContent:"center",alignItems:"center",alignSelf:"center" }}/>                          
+                      <Card  style={{margin:20}} transparent>   
+                          <CardItem cardBody>                            
+                            {
+                                (this.state.ultimoRegistro && this.state.ultimoRegistro.base64) ?                                
+                                <Image source={{uri : this.getImageSource()}} style={{height: 200, width: null, padding:25, flex:1, justifyContent:"center",alignContent:"center",alignItems:"center",alignSelf:"center" }}/>                                                          
+                                :                                
+                                <View style={stylesImage.container} >                                  
+                                    <Image                                         
+                                        style={stylesImage.cover}
+                                        blurRadius={3}
+                                        source={tableroPlaceholder} 
+                                        
+                                        />                          
+                                    <Button style={stylesImage.close} rounded iconLeft  onPress={()=>this.cargarImageUuid()} > 
+                                                {
+                                                  this.state.loadingImagen ?                                                  
+                                                    <ActivityIndicator style={{padding:20}} color='white' size={"small"}></ActivityIndicator>                                                  
+                                                   :
+                                                   <>
+                                                    <Icon  style={{color:"white",fontSize:15}} name='download' type="AntDesign" />  
+                                                    <Text style={{color:"white",fontSize:12}} >{`${(this.state.ultimoRegistro && this.state.ultimoRegistro.pesoAdjunto) ? this.state.ultimoRegistro.pesoAdjunto:'-' }`}</Text>                                          
+                                                   </>
+                                                }                                          
+                                          
+                                    </Button>                                    
+                                </View>
+                            }
                           </CardItem>        
                           <CardItem footer>
-                            <Body>                            
-                              <Text style={styles.bookingHeaderlTitleKm}>{`${ ultimoRegistro && ultimoRegistro.kilometraje }km`}</Text>            
+                            <Body>                                                            
+                                <Text style={styles.bookingHeaderlTitleKm}>{`${ ultimoRegistro && ultimoRegistro.kilometraje }km`}</Text>            
                             </Body>                            
                             <Right>                            
                               <Text style={styles.dateLabel} >{moment(ultimoRegistro && ultimoRegistro.creado,'YYYY-MM-DDThh:mm:ss').fromNow()}</Text>                      
                             </Right>
-                          </CardItem>      
-                          <CardItem  footer button onPress={this.launchCamera} >
-                                <Body>
-                                  <Icon style={{color:COLOR.lightViolet}} name='camera' type="FontAwesome"  />                        
-                                  <Text>Actualizar km</Text>
-                                </Body>
-                          </CardItem>         
-                      </Card>
-                       
+                          </CardItem>                                
+                       </Card>                       
                        :
                        <>
-                       <ListItem thumbnail style={{paddingBottom:5}} onPress={()=>this.openGallery(0)}>                        
+                       <ListItem thumbnail style={{paddingBottom:5}} onPress={()=>this.openGallery()}>                        
                               <Thumbnail  square                             
                                style={{height: 200, width: null, marginEnd:15, flex:1,justifyContent:"center",alignContent:"center",alignSelf:"center"}}
-                               source={{ uri: e.uri}} />
+                               source={{ uri: this.state.photo.uri}} />
                         </ListItem>                     
                         <ListItem icon>            
                             <Left >
@@ -386,46 +533,167 @@ initEdit (index){
                             </Left>
                             <Body>
                                 <TextInput
+                                    autoFocus={true}
                                     placeholder='Escribe aquí el Km'     
                                     keyboardType='numeric'                
+                                    autoCorrect={false}
+                                    underlineColorAndroid='transparent'
                                     style={styles.formInputKilometraje}
-                                />  
+                                    onChangeText={(kilometraje) => this.setState({ kilometraje })} 
+                                    value={this.state.kilometraje}
+                                />                                  
                             </Body>
                             <Right >
-                                  <Icon style={{color:COLOR.lightViolet}} name='camera' type="FontAwesome"  onPress={() => this.cameraLaunch()} />                        
+                                <Icon  style={{color:"gray",fontSize:25}} name='camera' type="FontAwesome" onPress={this.cameraLaunch} />  
                             </Right>
                             </ListItem>    
                       </>
         }               
                     
-        
         <ImageGallery    
               initialIndex={0}                            
               thumbSize={50}
               images={[this.state.photo]}
               isOpen={this.state.isOpenGallery}                      
               close={this.closeGallery}           
-        />       
-                    
+        />     
+   
       </Content>
 
 
       <View style={theme.footer}>
-        <TouchableOpacity style={theme.fBtn} onPress={() => { navigate('PublicHome') }}>
+        <TouchableOpacity style={theme.fBtn} onPress={() => { /* navigate('PublicHome') */}}>
             <Icon name='car' type='FontAwesome5' style={theme.fBtnIcon} />            
         </TouchableOpacity>
         
         <View style={theme.botPop}>
-          <TouchableOpacity style={theme.botPopBtn} onPress={() => { /*guardar*/  }}>
-            <Icon  style={{color:"white",fontSize:25}} name='check' type="Entypo" />  
-            <Text style={theme.botPopText}>{__('Guardar')}</Text>            
+        {(this.state.photo.url && this.state.kilometraje) ?
+            <TouchableOpacity style={theme.botPopBtn} onPress={() => {  this.iniciarGuardar() }}>
+              <Icon  style={{color:"white",fontSize:25}} name='check' type="Entypo" />  
+              <Text style={theme.botPopText}>{__('Guardar')}</Text>            
           </TouchableOpacity>
+          :
+          <TouchableOpacity style={theme.botPopBtnGuardar} disabled={this.state.loadingGuardar} onPress={() => {  this.cameraLaunch() }}>
+            {
+              this.state.loadingGuardar ?   
+                    <ActivityIndicator color='white' size={'large'} animating={true} />
+                    :
+                    <>
+                      <Icon  style={{color:"white",fontSize:25}} name='camera' type="FontAwesome" />              
+                      <Text style={theme.botPopText}>{__('Iniciar')}</Text>            
+                    </>
+            }
+            
+          </TouchableOpacity>          
+        }
         </View>        
-        <TouchableOpacity style={ theme.fBtn} onPress={() => { navigate('PublicMyAccount') }}>
-        <Icon name='history' type='FontAwesome5' style={theme.fBtnIcon} />
+        <TouchableOpacity style={ theme.fBtn} onPress={() => { /*navigate('PublicMyAccount')*/ }}>
+             <Icon name='history' type='FontAwesome5' style={theme.fBtnIcon} />
         </TouchableOpacity>
       </View>
+
+
+      <Modal
+        ref={'ModalSucessful'}
+        isOpen={this.state.isOpen}
+        position={'center'}        
+        swipeToClose={false}
+        
+        style={styles.mConfirmBox}>
+        <TouchableOpacity style={styles.closeIcon} onPress={() => this.refs.ModalSucessful.close()}>
+          <Icon name='close' type='AntDesign' style={[theme.huge, theme.grey]} />
+        </TouchableOpacity>
+        <ScrollView>
+          <View style={styles.modalItem}>
+            <View>
+              {
+                  (this.state.responseOk) ?
+                    <>
+                      <Image source={require('@asset/images/success-green.png')} resizeMode='contain' style={styles.confirmImg} />
+                      <Text style={styles.modalText}>{  __('¡Todo bien!')}</Text>
+                      <Text style={{ fontSize:15 ,...styles.modalText}}>{  __('Espere un momento...')}</Text>
+                    </>
+                  : <>
+                      <Text style={styles.modalTitle}>{`${this.state.item && this.state.item.marca} ${this.state.item && item.clase} ${this.state.item && this.state.item.modelo} ${this.state.item && this.state.item.color} `} </Text> 
+                      <Text style={styles.modalTitle}>{`Actualización`}</Text>
+                      <Text style={styles.modalTitle}>{`${this.state.kilometraje} KM`}</Text>
+                      <Text style={styles.modalText}>{  __('¿Confirma la actualización?')}</Text>
+                    </>
+              }                
+              {
+                  this.state.responseError && <Text style={{color:"red" ,...styles.modalTitle}}>{`Sucedió un error`}</Text>
+              }
+              {
+                  this.state.loadingGuardar && <ActivityIndicator size={'small'} color="green"  />                   
+              }
+            </View>
+            {/*<Text style={styles.modalTitle}>{__('¿Confirme la actualización?')}</Text>
+            <Text style={styles.modalText}>{  __('¿Confirma la actualización?')}</Text>*/}
+          </View>
+          <Grid>
+            <Col>
+              <TouchableOpacity  disabled={this.state.loadingGuardar} style={this.state.loadingGuardar ? styles.confirmOrderBtnDisabled : styles.confirmOrderBtn } onPress={() => { this.guardar() /*navigate('PublicHome')*/}}>
+              <View style={styles.confirmBtn}>                              
+                <Text style={styles.confirmBtnText}>{__('Confirmar')}</Text>
+              </View>
+              {/*<View>
+                <Icon name='check' type='AntDesign' style={[theme.extraLarge, theme.light]} />
+              </View>*/}
+              </TouchableOpacity>          
+            </Col>
+            <Col>
+              <TouchableOpacity style={styles.closeOrderBtn} onPress={() => { this.refs.ModalSucessful.close() }}>
+                <View style={styles.confirmBtn}>              
+                    <Text style={styles.confirmBtnText}>{__('Cerrar')}</Text>              
+                </View>              
+              </TouchableOpacity>          
+            </Col>
+          </Grid>
+          
+        </ScrollView>
+      </Modal>
+
+
+      
+   
 
     </Container>
   }
 }
+
+const stylesImage = StyleSheet.create({
+  container: {
+    margin: 5,    
+    padding:5,
+    width:null,
+    height:200,
+    flex:1,
+    justifyContent:"center",
+    alignContent:"center",
+    alignItems:"center",
+    alignSelf:"center",       
+    
+  },
+  cover: {    
+    borderRadius:5,  
+    padding:25,
+    flex: 1,
+    justifyContent:"center",
+    alignContent:"center",
+    alignItems:"center",
+    alignSelf:"center",
+    backgroundColor: 'rgba(173, 164, 255, 0.8)',
+    opacity:0.5,    
+  },
+  close: {    
+    position: "absolute",            
+    backgroundColor: 'rgba(255, 255, 255, 0.6)',    
+    flex:1,
+    justifyContent:"center",
+    alignContent:"center",
+    alignItems:"center",
+    alignSelf:"center",       
+    borderWidth:1,
+    borderColor:"gray"
+  }
+});

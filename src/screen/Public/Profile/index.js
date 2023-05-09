@@ -11,9 +11,34 @@ import { navigate } from '@utility/navigation'
 import { __ } from '@utility/translation'
 import request from '@utility/request'
 import { bind } from '@utility/component'
+import { getUsuarioSesion } from '../../../services/Sesion';
 
 export default class extends React.Component {
+
+  constructor (props) {
+    super(props)
+    this.state = {
+          loading:false,
+          usuarioSesion:{}  
+    }
+  }
+
+
+  async componentDidMount () {
+    
+    const sesion  = await getUsuarioSesion();
+    console.log("SESION "+ JSON.stringify(sesion));
+    this.setState({
+      usuarioSesion:sesion.usuarioSesion
+    });
+
+  }
+
+
   render () {
+    
+    const userPlaceholder =  require("../../../../assets/images/user_placeholder.jpg");
+
     return <Container>
       <Header navLeftType='back' statusBarType='dark' />
       <Content contentContainerStyle={theme.layoutDf}>
@@ -23,14 +48,14 @@ export default class extends React.Component {
           <View style={styles.profileDetail}>
             <View style={styles.profileHeader}>              
               <View style={styles.profileHeaderInfo}>
-                <Text style={styles.profileHeaderTitle}>{__('Profile')}</Text>
-                <Text style={styles.profileHeaderText}>{__('Manage your profile informations')}</Text>
+                <Text style={styles.profileHeaderTitle}>{__('My Perfil')}</Text>
+                <Text style={styles.profileHeaderText}>{__('Información de mi cuenta')}</Text>
               </View>
             </View>
             <View style={styles.sectionWhite}>
               <View style={styles.editImg}>
-                <View style={styles.bgImg}>
-                  <Image source={{ uri: 'https://images.pexels.com/photos/774909/pexels-photo-774909.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500' }} style={styles.avatarImg} />
+                <View style={styles.bgImg}>                  
+                  <Image source={userPlaceholder} style={styles.avatarImg} />
                   <TouchableOpacity style={styles.editBtn}>
                     <Icon name='pencil' type='EvilIcons' style={[theme.large, theme.greyDark]} />
                   </TouchableOpacity>
@@ -40,10 +65,10 @@ export default class extends React.Component {
             <View style={styles.profileForm}>
               <View>
                 <View style={styles.formRow}>
-                  <Text style={styles.formText}>{__('NAME')}</Text>
+                  <Text style={styles.formText}>{__('NOMBRE')}</Text>
                   <View style={styles.formInfo}>
                     <TextInput
-                      placeholder='Salma Hayeke'
+                      placeholder={`${this.state.usuarioSesion.nombre}`}
                       placeholderTextColor='rgba(0,0,0,0.9)'
                       style={styles.formInput}
                     />
@@ -51,10 +76,10 @@ export default class extends React.Component {
                   </View>
                 </View>
                 <View style={styles.formRow}>
-                  <Text style={styles.formText}>{__('PASSWORD')}</Text>
+                  <Text style={styles.formText}>{__('CORREO')}</Text>
                   <View style={styles.formInfo}>
                     <TextInput
-                      placeholder='salma.hayeke125@gmail.com'
+                      placeholder={`${this.state.usuarioSesion.email}`}
                       placeholderTextColor='rgba(0,0,0,0.9)'
                       style={styles.formInput}
                     />
@@ -62,10 +87,10 @@ export default class extends React.Component {
                   </View>
                 </View>
                 <View style={styles.formRow}>
-                  <Text style={styles.formText}>{__('MOBILE NUMBER')}</Text>
+                  <Text style={styles.formText}>{__('NUMERO')}</Text>
                   <View style={styles.formInfo}>
                     <TextInput
-                      placeholder='+91 954354248'
+                      placeholder='+52'
                       placeholderTextColor='rgba(0,0,0,0.9)'
                       keyboardType={'numeric'}
                       style={styles.formInput}
@@ -74,9 +99,9 @@ export default class extends React.Component {
                   </View>
                 </View>
               </View>
-              <TouchableOpacity style={styles.saveBtn} onPress={() => { navigate('') }}>
-                <Text style={styles.saveBtnText}>{__('SAVE')}</Text>
-                <Icon name='arrowright' type='AntDesign' style={[theme.extraLarge, theme.light]} />
+              <TouchableOpacity disabled style={styles.saveBtn} onPress={() => { navigate('') }}>
+                <Text style={styles.saveBtnText}>{__('ACTUALIZAR')}</Text>
+                <Icon name='check' type='AntDesign' style={[theme.extraLarge, theme.light]} />
               </TouchableOpacity>
             </View>
           </View>

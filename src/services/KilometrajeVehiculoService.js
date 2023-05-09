@@ -13,7 +13,7 @@ export const getUltimoRegistro = async(uuid) => {
 
 export const guardarKilometraje = async(body) => {
 
-    console.log(`${URL.KILOMETRAJE}/vehiculo/${uuid}`);
+    console.log(`${URL.KILOMETRAJE}/guardar`);
 
-    return await Http.instance.get(`${URL.KILOMETRAJE}/vehiculo/${uuid}`);
+    return await Http.instance.postFile(`${URL.KILOMETRAJE}/guardar`, body);
 };

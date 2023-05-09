@@ -84,6 +84,10 @@ handleLogin = async (data) => {
   /*setTimeout(() => {
       this.props.navigation.navigate('PublicSplash', { usuario: this.login.usuario });    
   }, 3000);        */
+
+  /* hack para probar  */
+  console.log(JSON.stringify(data));
+  
   this.login = data;
   console.log("analizando sesion");
 
@@ -122,90 +126,77 @@ onToggleShowPasswordPressed = () => {
   render () {
     
     const fondo = require("../../../../assets/images/logo.png");
-    const back = require("../../../../assets/images/logo.png"); 
+    const back = require("../../../../assets/images/logo.png");    
     const logoCobra = require("@asset/images/cobra.png");    
-    const carImagen = require("@asset/images/car.png");       
+    const carImagen = require("@asset/images/car.png");    
 
-    return <Container >      
-      <View style={styles.container}>            
-      <StatusBar
-                        animated={true}
-                        backgroundColor="#E17017"                      
-                        barStyle={'light-content'}
-                        showHideTransition={'fade'}
-
-                        hidden={true} />
-        
+    return <Container>
+    <StatusBar backgroundColor='rgba(51, 50, 85, 1)' barStyle='light-content' />
+    <View style={styles.bgCover} />    
+    <View style={styles.bgLayout}>
 
       <TouchableOpacity style={styles.actBarBtn} onPress={() => { /*navigate('PublicIntro')*/ }}>
         <Image source={logoCobra} style={styles.logoCobra} />
       </TouchableOpacity>
             
-        <Content contentContainerStyle={styles.layoutDf}>
-               
-          <View style={styles.signInForm}>
-            <View style={styles.containerTextoSiaSiscop}>
-                  <Image source={logoCobra} style={{  width: 150,  height: 100,paddingBottom:20}} />
+
+      <Content contentContainerStyle={styles.layoutDf}>
+        <View style={{flex:1, justifyContent:"center",alignContent:"center",alignItems:"center",}}>
+            <Image source={carImagen} style={styles.logoLogin} resizeMode="cover" />
+        </View>       
+        
+        <View style={styles.signInForm}>        
+
+          <View>
+            <Text style={styles.formText}>{__('USUARIO')}</Text>
+            <View style={styles.formRow}>
+              <TextInput
+                placeholder='usuario@grupocobra.mx'
+                placeholderTextColor='rgba(132, 130, 157, 1)'       
+                autoCapitalize='none'
+                autoCorrect={false}
+                style={styles.formInput}         
+                onChangeText={(email) => this.setState({ email })} 
+                value={this.state.email}
+              />
+              <Icon name='mail' type='Foundation' style={[theme.huge, theme.smoke]} />
             </View>
-            <View>
-              <Text style={styles.formText}>{__('USUARIO')}</Text>
-             
-              <View style={styles.inputContainer}>
-               
-                <TextInput style={styles.inputs}                                
-                        placeholder="correo@grupocobra.mx"
-                                keyboardType="email-address"
-                                underlineColorAndroid='transparent'
-                                autoCapitalize='none'
-                                autoCorrect={false}
-                                onChangeText={(email) => this.setState({ email })} 
-                                value={this.state.email}
-                                />
-                  <Icon name='mail' type='Foundation' style={[theme.huge, theme.smoke]} />
-                
-              </View>
+            <Text style={styles.formText}>{__('PASSWORD')}</Text>
+            <View style={styles.formRow}>
+              <TextInput
+                placeholder='* * * * * * * * * *'
+                placeholderTextColor='rgba(132, 130, 157, 1)'       
+                style={styles.formInput}   
+                secureTextEntry={this.state.secureTextEntry}
+                onChangeText={(password) => this.setState({ password })} 
+                value={this.state.password}
+              />
+              <Icon name='lock' type='FontAwesome' style={[theme.huge, theme.smoke]} />
+            </View>
+            <TouchableOpacity onPress={() => { navigate('PublicForgotPassword') }}>
+              <Text style={styles.forgotText}>{__('Forgot your password?')}</Text>
+            </TouchableOpacity>
 
-              <Text style={styles.formText}>{__('PASSWORD')}</Text>
-              <View style={styles.inputContainer}>
-
-                  <TextInput style={styles.inputs}
-                                placeholder="******"
-                                secureTextEntry={this.state.secureTextEntry}
-                                autoCorrect={false}
-                                underlineColorAndroid='transparent'
-                                onChangeText={(password) => this.setState({ password })} 
-                                value={this.state.password}
-                                />
-                                
-                    <Icon name='lock' type='FontAwesome' style={[theme.huge, theme.smoke]} />
-
-                
-              </View>
-
-              <TouchableOpacity onPress={() => { navigate('PublicForgotPassword') }}>
-                <Text style={styles.forgotText}>{__('Forgot your password?')}</Text>
-              </TouchableOpacity>
-              
-              <TouchableOpacity style={[styles.buttonContainer, styles.loginButton]}  onPress={() =>  this.onClickListener()}>                
+            <TouchableOpacity style={[styles.buttonContainer, styles.loginButton]}  onPress={() =>  this.onClickListener()}>
                     {!this.state.loading && <Text style={styles.loginText}>{__('LOGIN')}</Text>}
-                      {this.state.loading && <Spinner color='#FFF' />}            
+                    {this.state.loading && <Spinner color='#FFF' size={'small'} />}                        
+            </TouchableOpacity>
+            
+            <View style={styles.createAccountInfo}>
+              <Text style={styles.customerText}>{__('New Customer?')}</Text>
+              <TouchableOpacity onPress={() => { navigate('PublicCreateAccount') }}>
+                <Text style={styles.createBtnText}>{__('Create Account')}</Text>
               </TouchableOpacity>
-
-              <View style={styles.createAccountInfo}>
-                <Text style={styles.customerText}>{__('New Customer?')}</Text>
-                <TouchableOpacity onPress={() => { navigate('PublicCreateAccount') }}>
-                  <Text style={styles.createBtnText}>{__('Create Account')}</Text>
-                </TouchableOpacity>
-              </View>
             </View>
-
           </View>
-          {/*<Image source={require('@asset/images/car.png')} style={styles.bgImg} />*/}
 
-        </Content>
+        </View>
+        {/*<Image source={require('@asset/images/cobra.png')} style={styles.bgImg} />*/}
 
-      </View>
-    </Container>
+      </Content>
+
+    </View>
+  </Container>
   }
 }
 
@@ -222,6 +213,8 @@ onToggleShowPasswordPressed = () => {
                 <TextInput
                   placeholder='tu usuario'                  
                   style={styles.formInput}
+                    onChangeText={(email) => this.setState({ email })} 
+                                value={this.state.email}
                 />
                 <Icon name='mail' type='Foundation' style={[theme.huge, theme.smoke]} />
               </View>
@@ -230,6 +223,8 @@ onToggleShowPasswordPressed = () => {
                 <TextInput
                   placeholder='* * * * * * * * * *'                  
                   style={styles.formInput}
+                  onChangeText={(password) => this.setState({ password })} 
+                  value={this.state.password}
                 />
                 <Icon name='lock' type='FontAwesome' style={[theme.huge, theme.smoke]} />
               </View>

@@ -62,7 +62,8 @@ export default {
   avatarImg: {
     width: 190,
     height: 190,
-    borderRadius: 95
+    borderRadius: 95,
+    fontSize:30
   },
   editBtn: {
     position: 'absolute',
