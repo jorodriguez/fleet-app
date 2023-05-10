@@ -7,9 +7,10 @@ import AsyncStorage from '@react-native-community/async-storage'
 import { Col, Row, Grid } from 'react-native-easy-grid';
 import { } from 'rn-placeholder'
 import moment from "moment";
-import 'moment/min/moment-with-locales'
+import 'moment/locale/es';
 moment.locale('es'); 
 
+import { SimpleAnimation } from 'react-native-simple-animations';
 import Modal from 'react-native-modalbox'
 import DropDownPicker from 'react-native-dropdown-picker'
 import DateTimePicker from '@react-native-community/datetimepicker'
@@ -464,7 +465,7 @@ buttonOk(){
       <View style={styles.bookingContainer}>
 
         <View style={styles.bookingContent}>
-            
+          <SimpleAnimation delay={600} duration={2000} distance={100} friction={15} direction="right" movementType="slide">     
             <View style={styles.bookingHeader}>                                           
               <Text style={styles.bookingHeaderlTitle}>{__('Kilometraje ')}</Text>           
               {
@@ -473,7 +474,8 @@ buttonOk(){
                 :                 
                  <Text style={styles.bookingSubHeaderlTitle}>{`${item && item.marca} ${item && item.clase} ${item && item.modelo} ${item && item.color} `} </Text>                                 
               }              
-          </View>
+            </View>
+          </SimpleAnimation>
            
        </View>
       </View>
@@ -483,6 +485,7 @@ buttonOk(){
                           
         {/* padding:25, flex:1, justifyContent:"center",alignContent:"center",alignItems:"center",alignSelf:"center" */ 
             !this.state.photo.url ?
+                      <SimpleAnimation delay={600} duration={2000} distance={100} friction={15}  movementType="slide">     
                       <Card  style={{margin:20}} transparent>   
                           <CardItem cardBody>                            
                             {
@@ -519,7 +522,8 @@ buttonOk(){
                               <Text style={styles.dateLabel} >{moment(ultimoRegistro && ultimoRegistro.creado,'YYYY-MM-DDThh:mm:ss').fromNow()}</Text>                      
                             </Right>
                           </CardItem>                                
-                       </Card>                       
+                       </Card>     
+                       </SimpleAnimation>                  
                        :
                        <>
                        <ListItem thumbnail style={{paddingBottom:5}} onPress={()=>this.openGallery()}>                        
@@ -567,13 +571,13 @@ buttonOk(){
         </TouchableOpacity>
         
         <View style={theme.botPop}>
-        {(this.state.photo.url && this.state.kilometraje) ?
-            <TouchableOpacity style={theme.botPopBtn} onPress={() => {  this.iniciarGuardar() }}>
-              <Icon  style={{color:"white",fontSize:25}} name='check' type="Entypo" />  
-              <Text style={theme.botPopText}>{__('Guardar')}</Text>            
-          </TouchableOpacity>
-          :
-          <TouchableOpacity style={theme.botPopBtnGuardar} disabled={this.state.loadingGuardar} onPress={() => {  this.cameraLaunch() }}>
+        {(this.state.photo.url && this.state.kilometraje) ?                                    
+            <TouchableOpacity style={theme.botPopBtn} onPress={() => {  this.iniciarGuardar() }}>                              
+                <Icon  style={{color:"white",fontSize:25}} name='check' type="Entypo" />  
+                <Text style={theme.botPopText}>{__('Guardar')}</Text>                                          
+            </TouchableOpacity>                        
+          :          
+          <TouchableOpacity style={theme.botPopBtnGuardar} disabled={this.state.loadingGuardar} onPress={() => {  this.cameraLaunch() }}>                                    
             {
               this.state.loadingGuardar ?   
                     <ActivityIndicator color='white' size={'large'} animating={true} />
@@ -582,9 +586,9 @@ buttonOk(){
                       <Icon  style={{color:"white",fontSize:25}} name='camera' type="FontAwesome" />              
                       <Text style={theme.botPopText}>{__('Iniciar')}</Text>            
                     </>
-            }
-            
+            }                      
           </TouchableOpacity>          
+          
         }
         </View>        
         <TouchableOpacity style={ theme.fBtn} onPress={() => { /*navigate('PublicMyAccount')*/ }}>
@@ -609,9 +613,11 @@ buttonOk(){
               {
                   (this.state.responseOk) ?
                     <>
+                    <SimpleAnimation duration={1000} staticType='bounce'>     
                       <Image source={require('@asset/images/success-green.png')} resizeMode='contain' style={styles.confirmImg} />
                       <Text style={styles.modalText}>{  __('¡Todo bien!')}</Text>
                       <Text style={{ fontSize:15 ,...styles.modalText}}>{  __('Espere un momento...')}</Text>
+                    </SimpleAnimation>
                     </>
                   : <>
                       <Text style={styles.modalTitle}>{`${this.state.item && this.state.item.marca} ${this.state.item && item.clase} ${this.state.item && this.state.item.modelo} ${this.state.item && this.state.item.color} `} </Text> 
@@ -631,7 +637,7 @@ buttonOk(){
             <Text style={styles.modalText}>{  __('¿Confirma la actualización?')}</Text>*/}
           </View>
           <Grid>
-            <Col>
+            <Col>              
               <TouchableOpacity  disabled={this.state.loadingGuardar} style={this.state.loadingGuardar ? styles.confirmOrderBtnDisabled : styles.confirmOrderBtn } onPress={() => { this.guardar() /*navigate('PublicHome')*/}}>
               <View style={styles.confirmBtn}>                              
                 <Text style={styles.confirmBtnText}>{__('Confirmar')}</Text>
@@ -639,7 +645,7 @@ buttonOk(){
               {/*<View>
                 <Icon name='check' type='AntDesign' style={[theme.extraLarge, theme.light]} />
               </View>*/}
-              </TouchableOpacity>          
+              </TouchableOpacity>                        
             </Col>
             <Col>
               <TouchableOpacity style={styles.closeOrderBtn} onPress={() => { this.refs.ModalSucessful.close() }}>

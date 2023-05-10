@@ -16,15 +16,13 @@ import Header from '@component/Header'
 export default class extends React.Component {
   render () {
     return <Container>
-      <Header navLeftType='back' statusBarType='dark' />
-
+      <Header navLeftType='back' statusBarType='dark' showNavRight />
       <Content contentContainerStyle={theme.layoutDf}>
         <View style={styles.bgMainLayout}>
           <View style={styles.bgCover}>
-            <Text style={styles.aboutTitle}>{__('About Us')}</Text>
-            <Text style={styles.aboutText}>{__('  Integer pellentesque enim nec sem aliquam porttitor.  Duis et nunc at est euismod convallis sit amet vitae risus. In non orci eu risus aliquet volutpat ut non erat.')}</Text>
-            <Text style={styles.aboutText}>{__('  Aenean sem sapien, vestibulum eu elit dignissim, sodales scelerisque lectus. Duis eu tempor metus. Vivamus luctus erat eget pellentesque rutrum.')}</Text>
-            <Text style={styles.aboutText}>{__(' Sed blandit, eros sed cursus tempor, nibh nisi sodales elit, nec consequat nunc quam quis odio. Morbi bibendum mi lobortis luctus placerat. Nulla facilisis metus odio.')}</Text>
+            <Text style={styles.aboutTitle}>{__('Acerca de')}</Text>
+            <Text style={styles.aboutText}>{__(' Esta aplicación esta destinada para el registro del kilometraje de la unidad o las unidades asignadas al usuario en sesión. ')}</Text>            
+            <Text style={styles.aboutText}>{__(' Cualquier comentario o duda al respecto enviar un correo a jorodriguez@ihsa.mx')}</Text>            
           </View>
         </View>
       </Content>

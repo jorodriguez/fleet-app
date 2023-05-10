@@ -1,7 +1,7 @@
 
 import React from 'react'
 import { StatusBar, TouchableOpacity,RefreshControl, Text } from 'react-native'
-import { Container, Content, Icon, View } from 'native-base'
+import { Container, Content, Grid, Row,Col, Icon, View } from 'native-base'
 
 import styles from './styles'
 import theme from '@theme/styles'
@@ -88,7 +88,13 @@ async logout(){
           <View style={styles.myAccountHeader}>
             <View>
               <Text style={styles.myAccountHeaderTitle}>{ this.state.usuarioSesion && this.state.usuarioSesion.nombre}</Text>
-              <Text style={styles.myAccountHeaderText}>{__('Versión 0.1 ')}</Text>
+              <TouchableOpacity onPress={()=> navigate('PublicAboutUs')}>
+              <Grid>
+                <Col style={{width:20}} ><Icon name='info-circle' type='FontAwesome5' style={styles.myAccountHeaderText} /></Col>
+                <Col><Text style={styles.myAccountHeaderText}>{__('Versión 0.1 ')}</Text></Col>
+              </Grid>           
+              </TouchableOpacity>      
+             
             </View>
             {/*<View style={styles.myAccountContent}>
               <View style={[styles.myAccountInfo, styles.bgBlue]}>

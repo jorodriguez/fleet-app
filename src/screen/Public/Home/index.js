@@ -6,6 +6,7 @@ import AsyncStorage from '@react-native-community/async-storage'
 import { } from 'rn-placeholder'
 
 import DateTimePicker from '@react-native-community/datetimepicker'
+import { SimpleAnimation } from 'react-native-simple-animations';
 
 import styles from './styles'
 

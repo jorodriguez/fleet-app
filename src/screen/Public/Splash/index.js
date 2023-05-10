@@ -11,6 +11,9 @@ import {
 import AsyncStorage from '@react-native-community/async-storage';
 import { COLOR, FAMILY, SIZE } from '@theme/typography'
 import { navigate } from '@utility/navigation'
+import { SimpleAnimation } from 'react-native-simple-animations';
+
+
 
 const deviceHeight = Dimensions.get("window").height;
 const deviceWidth = Dimensions.get("window").width;
@@ -65,9 +68,10 @@ export default  class extends React.Component{
                         backgroundColor="#E17017"                      
                         barStyle={'light-content'}
                         showHideTransition={'fade'}
-                        hidden={true} />
-                        
-            <Image source={logoCobra} style={{ resizeMode:"contain",width:200 }}  />                
+                        hidden={true} />            
+            <SimpleAnimation delay={600} duration={2000} distance={50} friction={15} direction="up" movementType="slide">     
+                <Image source={logoCobra} style={{ resizeMode:"contain",width:200 }}  />                
+            </SimpleAnimation>                        
             {this.state.sesionExpirada && <Text style={{fontSize:12,color:"white"}} >Sesión Expirada</Text> }
             <ActivityIndicator color={"#fff"} />                
       </View>

@@ -5,12 +5,14 @@ import { Icon, View } from 'native-base'
 import { navigate } from '@utility/navigation'
 
 import theme from '@theme/styles'
+import { SimpleAnimation } from 'react-native-simple-animations';
 
 import { __ } from '@utility/translation'
 
 export default class extends React.Component {
   render () {
     return (
+      <SimpleAnimation delay={600} duration={2000} distance={100} friction={15} direction="up" movementType="slide">     
       <View style={theme.footer}>
         <TouchableOpacity style={this.props.currentScreen === 'Home' ? theme.fBtnActive : theme.fBtn} onPress={() => { navigate('PublicHome') }}>
           <Icon name='home' type='AntDesign' style={this.props.currentScreen === 'Home' ? theme.fBtnIconActive : theme.fBtnIcon} />
@@ -34,6 +36,7 @@ export default class extends React.Component {
           <Icon name='cogs' type='FontAwesome5' style={this.props.currentScreen === 'Profile' ? theme.fBtnIconActive : theme.fBtnIcon} />
         </TouchableOpacity>
       </View>
+      </SimpleAnimation>
     )
   }
 }

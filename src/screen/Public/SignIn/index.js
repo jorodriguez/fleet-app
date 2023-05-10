@@ -1,14 +1,15 @@
 import React from 'react'
-import { StatusBar, TouchableOpacity, Image, TextInput,Alert } from 'react-native'
+import { StatusBar, TouchableOpacity, Image, TextInput,Alert,Keyboard } from 'react-native'
 import { Container, Content, Icon, Text, View,Input ,Spinner} from 'native-base'
 
 import styles from './styles'
 import theme from '@theme/styles'
+import { SimpleAnimation } from 'react-native-simple-animations';
 
 import { navigate } from '@utility/navigation'
 import { __ } from '@utility/translation'
 import request from '@utility/request'
-import { bind } from '@utility/component'
+import { bind } from '@utility/component';
 import { login, cerrarSesion } from '../../../services/LoginService';
 import { setUsuarioSesion, eliminarSesion } from '../../../services/Sesion';
 
@@ -59,6 +60,10 @@ componentDidMount() {
 
 onClickListener = () => {
         
+  Keyboard.dismiss();
+
+
+
   if (this.state.email == '') {
       Alert.alert("Usuario Requerido", "Es necesario ingresar tu usuario ");
   } else {
@@ -139,22 +144,25 @@ onToggleShowPasswordPressed = () => {
 
                         hidden={true} />
         
-
+        
       <TouchableOpacity style={styles.actBarBtn} onPress={() => { /*navigate('PublicIntro')*/ }}>
         <Image source={logoCobra} style={styles.logoCobra} />
       </TouchableOpacity>
+      
             
         <Content contentContainerStyle={styles.layoutDf}>
-               
-          <View style={styles.signInForm}>
-            <View style={styles.containerTextoSiaSiscop}>
+        <SimpleAnimation delay={600} duration={2000} distance={100} friction={15} direction="up" movementType="slide">     
+            <View style={styles.signInForm}>
+          
+              <View style={styles.containerTextoSiaSiscop}>
                   <Image source={logoCobra} style={{  width: 150,  height: 100,paddingBottom:20}} />
-            </View>
+              </View>          
+            
             <View>
               <Text style={styles.formText}>{__('USUARIO')}</Text>
              
               <View style={styles.inputContainer}>
-               
+                
                 <TextInput style={styles.inputs}                                
                         placeholder="correo@grupocobra.mx"
                                 keyboardType="email-address"
@@ -204,7 +212,7 @@ onToggleShowPasswordPressed = () => {
 
           </View>
           {/*<Image source={require('@asset/images/car.png')} style={styles.bgImg} />*/}
-
+          </SimpleAnimation>
         </Content>
 
       </View>
